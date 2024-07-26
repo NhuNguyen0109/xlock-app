@@ -1,0 +1,43 @@
+.button-1-fill {
+  border: solid 2px #29428d;
+  background-color: #29428d;
+  border-radius: 14px;
+  color: #fff;
+}
+
+.button-1-empty {
+  border: solid 2px #29428d;
+  background-color: #fff;
+  border-radius: 14px;
+  color: #29428d;
+}
+.button-2-fill {
+  border: solid 2px #0570eb;
+  background-color: #0570eb;
+  border-radius: 6px;
+  color: #fff;
+}
+.button-2-empty {
+  border: solid 2px #0570eb;
+  background-color: #fff;
+  border-radius: 6px;
+  color: #0570eb;
+}
+
+.button-3 {
+  background-color: white;
+  border-radius: 6px;
+  color: black;
+}
+.button-1-fill,
+.button-1-empty,
+.button-2-fill,
+.button-2-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}

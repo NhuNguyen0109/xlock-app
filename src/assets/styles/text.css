@@ -1,0 +1,46 @@
+.title {
+  color: #0157b9;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.inactive-title {
+  color: #878c8c;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.body-text,
+.body-text-bold,
+.body-text-light,
+.body-text-500 {
+  color: #000;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.body-text-500 {
+  font-weight: 500;
+}
+
+.body-text-bold {
+  font-weight: 600;
+}
+
+.body-text-light {
+  color: #767c7c;
+}
+
+.h1 {
+  color: #000;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}

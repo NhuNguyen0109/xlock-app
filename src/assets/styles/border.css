@@ -1,0 +1,13 @@
+.box-border {
+  border: 1px solid #e8e8e8;
+}
+
+.card-border {
+  border-bottom: 10px solid;
+  border-image-slice: 10;
+  border-image-source: linear-gradient(to bottom, #000, #8a8a8a, #fff);
+}
+
+.test-border {
+  border: 2px solid red;
+}
