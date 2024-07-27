@@ -3,18 +3,30 @@ import "../../assets/styles/button.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { registerActions } from "../../store/register-info.slice";
-import { genPublicKey, genPrivateKey } from "../../utils/genKey";
+import requestKeyPair from "../../utils/browserCall/request.key.pair";
 import ButtonType from "../../types/button";
 
 const GenerateKey: React.FC<ButtonType> = ({ handleNextStep }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const public_key = genPublicKey();
-    const encrypted_private_key = genPrivateKey();
-    dispatch(
-      registerActions.setRegisterInfo({ public_key, encrypted_private_key })
-    );
+    const generateKeyPair = async () => {
+      try {
+        const { privateKey: encrypted_private_key, publicKey: public_key } =
+          await requestKeyPair();
+        console.log(encrypted_private_key, public_key);
+        dispatch(
+          registerActions.setRsaKeyPairs({
+            public: public_key,
+            enc_pri: encrypted_private_key,
+          })
+        );
+      } catch (error) {
+        console.error("Error generating key pair:", error);
+      }
+    };
+
+    generateKeyPair();
   }, [dispatch]);
 
   return (

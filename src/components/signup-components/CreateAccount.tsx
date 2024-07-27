@@ -25,7 +25,6 @@ const CreateAccount: React.FC<ButtonType> = ({ handleNextStep }) => {
 
   const handleSubmit = () => {
     dispatch(registerActions.setRegisterInfo(formData));
-    console.log("dsdsd");
     handleNextStep();
   };
 

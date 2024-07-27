@@ -4,6 +4,7 @@ import ButtonType from "../../types/button";
 import InputFieldSubmit from "../input-field/InputFieldSubmit";
 import { useDispatch } from "react-redux";
 import { registerActions } from "../../store/register-info.slice";
+import requestHashPassword from "../../utils/browserCall/request.hash";
 import "../../assets/styles/button.css";
 import "../../assets/styles/shadow.css";
 
@@ -22,9 +23,20 @@ const CreatePassword: React.FC<ButtonType> = ({ handleNextStep }) => {
     }));
   };
 
-  const handleSubmit = () => {
-    dispatch(registerActions.setRegisterInfo(formData));
+  const handleSubmit = async () => {
     handleNextStep();
+    console.log("Password", formData.password);
+    const { password: hashPassword, salt: salt } = await requestHashPassword(
+      formData.password
+    );
+    console.log("Password", hashPassword);
+    console.log("Salt", salt);
+    dispatch(registerActions.setRegisterInfo({ password: hashPassword }));
+    dispatch(
+      registerActions.setRsaKeyPairs({
+        salt,
+      })
+    );
   };
 
   return (

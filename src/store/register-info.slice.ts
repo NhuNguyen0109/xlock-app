@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { encrypt } from "../utils/encrypt";
 
 export interface RegisterInfo {
   username: string;
   email: string;
   password: string;
-  public_key: string;
-  encrypted_private_key: string;
+  rsa_key_pairs: {
+    public: string;
+    enc_pri: string;
+    salt: string;
+  };
 }
 
 const registerSlice = createSlice({
@@ -15,36 +17,31 @@ const registerSlice = createSlice({
     username: "",
     email: "",
     password: "",
-    public_key: "",
-    encrypted_private_key: "",
+    rsa_key_pairs: {
+      public: "",
+      enc_pri: "",
+      salt: "",
+    },
   } as RegisterInfo,
   reducers: {
-    // setRegisterInfo: {
-    //   reducer: (state, action: PayloadAction<Partial<RegisterInfo>>) => {
-    //     Object.assign(state, action.payload);
-    //   },
-    //   prepare: (payload: Partial<RegisterInfo>) => {
-    //     const encryptedPayload = { ...payload };
-    //     if (encryptedPayload.encrypted_private_key) {
-    //       encryptedPayload.encrypted_private_key = encrypt(
-    //         encryptedPayload.encrypted_private_key
-    //       );
-    //     }
-
-    //     return { payload: encryptedPayload };
-    //   },
-    // },
-
     setRegisterInfo: (state, action: PayloadAction<Partial<RegisterInfo>>) => {
       Object.assign(state, action.payload);
+    },
+
+    setRsaKeyPairs: (
+      state,
+      action: PayloadAction<Partial<RegisterInfo["rsa_key_pairs"]>>
+    ) => {
+      state.rsa_key_pairs = { ...state.rsa_key_pairs, ...action.payload };
     },
 
     resetRegisterInfo: (state) => {
       state.username = "";
       state.email = "";
       state.password = "";
-      state.public_key = "";
-      state.encrypted_private_key = "";
+      state.rsa_key_pairs.public = "";
+      state.rsa_key_pairs.enc_pri = "";
+      state.rsa_key_pairs.salt = "";
     },
   },
 });

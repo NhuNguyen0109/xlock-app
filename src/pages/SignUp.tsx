@@ -1,8 +1,8 @@
+import "../assets/styles/shadow.css";
+import "../assets/styles/border.css";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
-import "../assets/styles/shadow.css";
-import "../assets/styles/border.css";
 import backgroundImg from "../assets/images/background.png";
 import Header from "../components/main-components/Header";
 import Stepper from "../components/stepper/Stepper";
@@ -17,6 +17,8 @@ import { RegisterInfo } from "../store/register-info.slice";
 import apiCall from "../utils/apiCall";
 import { useNavigate } from "react-router-dom";
 import { useSubmitLogin, useLoggedIn } from "../utils/useHandleLogin";
+import requestSendToken from "../utils/browserCall/request.send.token";
+import requestSendSalt from "../utils/browserCall/request.send.salt";
 
 const SignUp = () => {
   const [component, setComponent] = useState(0);
@@ -28,19 +30,23 @@ const SignUp = () => {
 
   const { mutate } = useMutation({
     mutationFn: apiCall<RegisterInfo>,
-    // onSuccess: (data) => {
-    //   console.log("fsdfsdf");
-    //   handleLogin(data);
-    // },
-    onSettled: (data) => {
+    onSuccess: (data) => {
       console.log(data);
-      submitLogin(data);
+      submitLogin(data.data.id);
+      async () => {
+        await requestSendToken(data.data.token);
+        await requestSendSalt(data.data.salt);
+      };
     },
   });
 
   const handleSubmit = () => {
     console.log(registerInfo);
-    mutate({ method: "POST", endpoint: "", requestData: registerInfo });
+    mutate({
+      method: "POST",
+      endpoint: "/api/v1/auth/create",
+      requestData: registerInfo,
+    });
     handleNextStep();
   };
 
@@ -50,7 +56,6 @@ const SignUp = () => {
   };
 
   const handleNextStep = () => {
-    // console.log("Current index:", currentIndex);
     if (component < components.length - 1) {
       setComponent(component + 1);
     } else {
@@ -89,7 +94,6 @@ const SignUp = () => {
           {components[component]}
         </div>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 };
