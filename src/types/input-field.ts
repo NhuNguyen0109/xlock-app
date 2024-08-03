@@ -10,5 +10,7 @@ export interface DisabledInputType extends InputType {
 }
 export interface ActiveInputType extends InputType {
   type: string;
-  handleChangeValue?(event: React.ChangeEvent<HTMLInputElement>): void;
+  handleChangeValue?(
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void;
 }

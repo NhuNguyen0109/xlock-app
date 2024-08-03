@@ -1,42 +1,40 @@
-import "../assets/styles/shadow.css";
-import "../assets/styles/border.css";
+import "../assets/styles";
+import backgroundImg from "../assets/images/background.png";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
-import backgroundImg from "../assets/images/background.png";
-import Header from "../components/main-components/Header";
+import { Header } from "../components/main-components";
 import Stepper from "../components/stepper/Stepper";
-import AddExtension from "../components/signup-components/AddExtension";
-import CreateAccount from "../components/signup-components/CreateAccount";
-import CreatePassword from "../components/signup-components/CreatePassword";
-import GenerateKey from "../components/signup-components/GenerateKey";
-import Tutorial from "../components/signup-components/Tutorial";
-import Congratulations from "../components/signup-components/Congratulations";
+import {
+  AddExtension,
+  CreateAccount,
+  CreatePassword,
+  CreateProfile,
+  GenerateKey,
+  Tutorial,
+  Congratulations,
+} from "../components/signup-components";
 import { RootState } from "../store";
 import { RegisterInfo } from "../store/register-info.slice";
-import apiCall from "../utils/apiCall";
+import { apiCall, useSubmitLogin } from "../utils";
 import { useNavigate } from "react-router-dom";
-import { useSubmitLogin, useLoggedIn } from "../utils/useHandleLogin";
-import requestSendToken from "../utils/browserCall/request.send.token";
-import requestSendSalt from "../utils/browserCall/request.send.salt";
 
 const SignUp = () => {
   const [component, setComponent] = useState(0);
   const registerInfo = useSelector((state: RootState) => state.register);
+  const [vector, setVector] = useState<string>("");
   const submitLogin = useSubmitLogin();
-  const loggedIn = useLoggedIn();
-
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationFn: apiCall<RegisterInfo>,
     onSuccess: (data) => {
       console.log(data);
-      submitLogin(data.data.id);
-      async () => {
-        await requestSendToken(data.data.token);
-        await requestSendSalt(data.data.salt);
-      };
+
+      handleNextStep();
+    },
+    onError: (error) => {
+      console.error("Register Failed", error);
     },
   });
 
@@ -47,11 +45,23 @@ const SignUp = () => {
       endpoint: "/api/v1/auth/create",
       requestData: registerInfo,
     });
-    handleNextStep();
   };
 
-  const loginHomepage = () => {
-    loggedIn();
+  const handleLogin = async () => {
+    handleNextStep();
+    try {
+      await submitLogin({
+        email: registerInfo.email,
+        password: registerInfo.password,
+        salt: registerInfo.rsa_key_pairs.salt,
+        vector,
+      });
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  const handleNavigate = () => {
     navigate("/home");
   };
 
@@ -67,9 +77,14 @@ const SignUp = () => {
     <AddExtension key="add-extension" handleNextStep={handleNextStep} />,
     <CreateAccount key="create-account" handleNextStep={handleNextStep} />,
     <CreatePassword key="create-password" handleNextStep={handleNextStep} />,
-    <GenerateKey key="generate-key" handleNextStep={handleSubmit} />,
-    <Tutorial key="tutorial" handleNextStep={handleNextStep} />,
-    <Congratulations key="congratulations" handleNextStep={loginHomepage} />,
+    <CreateProfile key="create-profile" handleNextStep={handleNextStep} />,
+    <GenerateKey
+      key="generate-key"
+      handleNextStep={handleSubmit}
+      setVector={(vector) => setVector(vector)}
+    />,
+    <Tutorial key="tutorial" handleNextStep={handleLogin} />,
+    <Congratulations key="congratulations" handleNextStep={handleNavigate} />,
   ];
 
   return (
@@ -87,8 +102,10 @@ const SignUp = () => {
       >
         <Stepper step={component} />
         <div
-          className={`content w-[432px] h-fit box-shadow p-[30px] rounded-[12px] ${
-            component === 5 ? "mt-[30px]" : null
+          className={`content ${
+            component === 3 ? "w-[814px]" : "w-[432px]"
+          } h-fit box-shadow p-[30px] rounded-[12px] ${
+            component === 6 ? "mt-[30px]" : null
           }`}
         >
           {components[component]}

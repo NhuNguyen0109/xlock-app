@@ -29,7 +29,7 @@ const InputFieldSubmit: React.FC<ActiveInputType> = ({
         value={value}
         className="border-solid border-[2px] border-[#D1D3D3] w-full h-[40px] bg-white px-[12px] rounded-[6px] body-text"
         ref={passwordRef}
-        type={type}
+        type={type === "dob" ? "date" : type}
       />
       {type === "password" && (
         <div className="mt-[4px]">

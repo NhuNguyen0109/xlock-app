@@ -3,15 +3,15 @@ import React from "react";
 import "../../assets/styles/text.css";
 
 interface AccessCardProps {
-  device: string;
-  browser: string;
+  title: string;
+  body: string;
   date?: string;
   imageUrl?: string;
 }
 
 const AccessCard: React.FC<AccessCardProps> = ({
-  device,
-  browser,
+  title,
+  body,
   date,
   imageUrl,
 }) => {
@@ -25,8 +25,8 @@ const AccessCard: React.FC<AccessCardProps> = ({
         />
       </div>
       <div className="flex flex-col">
-        <p className="body-text-bold">{device}</p>
-        <p className="body-text">{browser}</p>
+        <p className="body-text-bold">{title}</p>
+        <p className="body-text">{body}</p>
         <p className="body-text-light">{date}</p>
       </div>
     </div>

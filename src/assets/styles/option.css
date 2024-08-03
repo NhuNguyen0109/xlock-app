@@ -1,0 +1,26 @@
+.custom-select {
+  /* Hide the default arrow */
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: transparent; /* Ensures no background overlaps the arrow */
+}
+
+/* Additional styles to add your own custom arrow */
+.custom-select-wrapper {
+  position: relative;
+  width: 352px;
+}
+
+.custom-select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px; /* Adjust this value based on your padding */
+  width: 10px;
+  height: 10px;
+  background: url("data:image/svg+xml;charset=UTF-8,%3csvg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M7 8l3 3 3-3' stroke='%23000' stroke-width='2'/%3e%3c/svg%3e")
+    no-repeat center center;
+  pointer-events: none;
+  transform: translateY(-50%);
+}

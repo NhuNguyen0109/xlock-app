@@ -1,8 +1,8 @@
-const getCookie = (name: string): string | undefined => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift();
-};
+// const getCookie = (name: string): string | undefined => {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop()?.split(";").shift();
+// };
 
 interface ApiCallParams<T = any> {
   endpoint: string;
@@ -18,18 +18,18 @@ const apiCall = async <T = any>({
   token,
 }: ApiCallParams): Promise<any> => {
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
-  const accessToken = token || getCookie("access_token");
 
-  if (!accessToken) {
-    throw new Error("No access token found.");
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(BASE_URL + endpoint, {
-    method: method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    method,
+    headers,
     body: method !== "GET" ? JSON.stringify(requestData) : undefined,
   });
 

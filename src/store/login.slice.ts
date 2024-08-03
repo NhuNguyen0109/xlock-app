@@ -1,19 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// export interface User {
+//   // name?: string;
+//   email: string;
+//   password: string;
+// }
+
 export interface LoginState {
   login: boolean;
-  user_id: string | null;
+  access_token: string | null;
 }
+
+const initialState: LoginState = {
+  login: false,
+  access_token: null,
+};
 
 const loginSlice = createSlice({
   name: "login",
-  initialState: {
-    login: false,
-    user_id: null,
-  } as LoginState,
+  initialState,
   reducers: {
-    handleSuccessLogin: (state, action: PayloadAction<string | null>) => {
-      state.user_id = action.payload;
+    handleAccessToken: (state, action: PayloadAction<string>) => {
+      state.access_token = action.payload;
     },
 
     handleLoggedIn: (state) => {
@@ -22,7 +30,7 @@ const loginSlice = createSlice({
 
     handleFailureLogin: (state) => {
       state.login = false;
-      state.user_id = null;
+      state.access_token = null;
     },
   },
 });
