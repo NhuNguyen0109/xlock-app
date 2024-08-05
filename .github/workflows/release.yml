@@ -1,9 +1,11 @@
-name: Tag, Build, and Release
+name: Create tag and release
 
 on:
     push:
         branches:
             - main
+        tags:
+            - "v*"
 
 jobs:
     tag_and_release:
@@ -33,7 +35,6 @@ jobs:
                   branch: main
 
             - name: Create Release
-              id: create_release
               uses: actions/create-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,33 +44,3 @@ jobs:
                   body: ${{ steps.release_notes.outputs.body }}
                   draft: false
                   prerelease: false
-            - name: Set Upload URL as Output
-              run: |
-                  echo "upload_url=${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_OUTPUT
-    build_and_upload:
-        runs-on: ubuntu-latest
-        needs: tag_and_release
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "20"
-
-            - name: Install Dependencies
-              run: npm install
-
-            - name: Build
-              run: npm run build
-
-            - name: Upload Release Asset
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ needs.tag_and_release.outputs.upload_url }}
-                  asset_path: ./dist/*
-                  asset_name: xlock-app-${{ steps.semver.outputs.next }}.zip
-                  asset_content_type: application/zip
