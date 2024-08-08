@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../../../../assets/styles";
-// import "./TagInput.css";
 
 const TagInput: React.FC = () => {
   const [tags, setTags] = useState<string[]>([]);

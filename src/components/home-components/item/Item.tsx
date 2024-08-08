@@ -9,6 +9,7 @@ import SharePopup from "./share/SharePopup.tsx";
 import AccountType, { ShareItemType } from "../../../types/item.ts";
 import getDecryptedCreds from "../../../utils/decrypt-creds.ts";
 import { DecryptedCreds } from "../../../utils/decrypt-creds.ts";
+import DeletePopup from "./delete/DeletePopup.tsx";
 
 const Item = () => {
   const [isReveal, setIsReveal] = useState(false);
@@ -73,6 +74,16 @@ const Item = () => {
             ref={modalRefShare}
           >
             <SharePopup closeModal={closeModalShare} item={selectedItem} />
+          </div>
+        </div>
+      )}
+      {isOpenDelete && (
+        <div className="blur-bg">
+          <div
+            className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
+            ref={modalRefDelete}
+          >
+            <DeletePopup closeModal={closeModalDelete} item={selectedItem} />
           </div>
         </div>
       )}
