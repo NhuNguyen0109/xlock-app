@@ -1,22 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface RegisterInfo {
-  username: string;
-  email: string;
-  password: string; // HashedPassword in Base64
-  fullname: string;
-  dob: string;
-  address: string;
-  phone_number: string;
-  gender: string;
-  country: string;
-  backup_email: string;
-  rsa_key_pairs: {
-    public: string;
-    enc_pri: string;
-    salt: string;
-  };
-}
+import RegisterInfo from "../types/register-info";
 
 const createEmptyRegisterInfo = (): RegisterInfo => ({
   username: "",
@@ -29,9 +12,9 @@ const createEmptyRegisterInfo = (): RegisterInfo => ({
   gender: "",
   country: "",
   backup_email: "",
-  rsa_key_pairs: {
+  rsa_key_pair: {
     public: "",
-    enc_pri: "",
+    enc_pri: "", //ConcatStr
     salt: "",
   },
 });
@@ -48,9 +31,9 @@ const registerSlice = createSlice({
 
     setRsaKeyPairs: (
       state,
-      action: PayloadAction<Partial<RegisterInfo["rsa_key_pairs"]>>
+      action: PayloadAction<Partial<RegisterInfo["rsa_key_pair"]>>
     ) => {
-      state.rsa_key_pairs = { ...state.rsa_key_pairs, ...action.payload };
+      state.rsa_key_pair = { ...state.rsa_key_pair, ...action.payload };
     },
 
     resetRegisterInfo: (state) => {

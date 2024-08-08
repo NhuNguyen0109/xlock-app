@@ -1,23 +1,24 @@
-// const getCookie = (name: string): string | undefined => {
-//   const value = `; ${document.cookie}`;
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop()?.split(";").shift();
-// };
+import { getAccessToken } from "./access-token";
 
-interface ApiCallParams<T = any> {
+interface ApiCallParams<V> {
   endpoint: string;
   method?: string;
-  requestData?: T;
-  token?: string;
+  requestData?: V;
 }
 
-const apiCall = async <T = any>({
+type ApiResponse<T> = {
+  code: number;
+  status: string;
+  data: T;
+};
+
+const apiCall = async <T, V = undefined>({
   endpoint,
   method = "GET",
   requestData,
-  token,
-}: ApiCallParams): Promise<any> => {
+}: ApiCallParams<V>): Promise<ApiResponse<T>> => {
   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+  const token = getAccessToken();
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",

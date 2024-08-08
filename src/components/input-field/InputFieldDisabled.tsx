@@ -14,8 +14,6 @@ const InputFieldDisabled: React.FC<DisabledInputType> = ({
 
   const [isCopy, setIsCopy] = useState(src || undefined);
 
-  console.log(actualValue);
-
   const handleCopy = () => {
     copyContent(actualValue ?? value);
     setIsCopy("src/assets/images/Success.png");
@@ -50,7 +48,6 @@ const copyContent = async (value: string) => {
 const isUrl = (value: string): boolean => {
   try {
     new URL(value);
-    console.log(value);
     return true;
   } catch (e) {
     return false;

@@ -1,12 +1,8 @@
 import "../assets/styles";
 import backgroundImg from "../assets/images/background.png";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useMutation } from "@tanstack/react-query";
 import { Header } from "../components/main-components";
-import { RootState } from "../store";
-import { RegisterInfo } from "../store/register-info.slice";
-import { apiCall, useSubmitLogin } from "../utils";
+import { useSubmitLogin } from "../utils";
 import { useNavigate } from "react-router-dom";
 import InputFieldSubmit from "../components/input-field/InputFieldSubmit";
 
@@ -38,7 +34,7 @@ const LogIn = () => {
   };
 
   const handleNavigate = () => {
-    setTimeout(() => navigate("/home"), 2000);
+    setTimeout(() => navigate("/home"));
   };
 
   return (

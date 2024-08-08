@@ -1,4 +1,4 @@
-import AccessCard from "./AccessCard";
+import AccessCard from "../history/AccessCard";
 const DATA = [
   {
     title: "Unknown device",

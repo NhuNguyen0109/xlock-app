@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import itemReducer, { ItemState } from "./item.slice.ts";
 import loginReducer, { LoginState } from "./login.slice.ts";
-import registerReducer, { RegisterInfo } from "./register-info.slice.ts";
+import registerReducer from "./register-info.slice.ts";
+import RegisterInfo from "../types/register-info.ts";
 
 const store = configureStore({
   reducer: {

@@ -1,13 +1,18 @@
-import "../../assets/styles/text.css";
-import getUserAgent from "../../utils/getUserAgent";
+import "../../../assets/styles/";
+import getUserAgent from "../../../utils/getUserAgent";
 
-const CurrentDevice = () => {
+const CurrentDevice: React.FC<{
+  openModal: () => void;
+}> = ({ openModal }) => {
   const userAgent = getUserAgent();
   return (
     <div className="device-section flex flex-col">
       <div className="header w-full h-[48px] bg-[#E6F1FD] flex items-center justify-between p-[12px]">
         <p className="title">Current device</p>
-        <div className="w-[24px] h-[24px] flex justify-center items-center">
+        <div
+          className="w-[24px] h-[24px] flex justify-center items-center"
+          onClick={openModal}
+        >
           <img src="src/assets/images/OpenTab.png" alt="OpenTab" className="" />
         </div>
       </div>
