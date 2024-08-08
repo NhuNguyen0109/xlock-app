@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiCall } from "../../../../utils";
 import { useLayoutEffect } from "react";
 import StatusPopup from "../../../status-popup/StatusPopup";
+import { queryClient } from "../../../../App";
 
 interface DeletePopup {
   closeModal(): void;
@@ -12,11 +13,14 @@ interface DeletePopup {
 const DeletePopup: React.FC<DeletePopup> = ({ closeModal, item }) => {
   const { mutate, isError, isSuccess } = useMutation({
     mutationFn: apiCall<null>,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    },
   });
 
   const handleDelete = () => {
     mutate({
-      endpoint: `/api/v1/items/delet/${item?.id}`,
+      endpoint: `/api/v1/items/delete/${item?.id}`,
       method: "DELETE",
     });
   };

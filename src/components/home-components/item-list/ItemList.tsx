@@ -44,6 +44,7 @@ const ItemList = () => {
         endpoint: "/api/v1/items/",
         method: "GET",
       });
+      console.log("success fetching items");
       return response.data;
     },
   });
