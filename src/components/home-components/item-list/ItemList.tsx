@@ -35,6 +35,7 @@ let DATA: AccountType[] = [
 
 const ItemList = () => {
   const dispatch = useDispatch();
+
   let itemsToRender = addOrderToAccounts(DATA);
 
   const { data, isSuccess, isError } = useQuery({
