@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
 import { RootState } from "../../../../store";
 import "../../../../assets/styles";
-import apiCall from "../../../../utils/apiCall";
+import { apiCall, ApiEndpoints } from "../../../../utils";
 import ShareItemType, {
   ResponseCreateShareItem,
   ResponseShareItemType,
@@ -67,7 +67,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
       // Create share item
       mutateCreate({
         method: "POST",
-        endpoint: "/api/v1/items/share/create",
+        endpoint: ApiEndpoints.CreateShareItem,
         requestData: {
           item_id: item.id,
           recipient: {
@@ -85,7 +85,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
   const handleShare = () => {
     mutate({
       method: "POST",
-      endpoint: "/api/v1/items/share",
+      endpoint: ApiEndpoints.ShareItem,
       requestData: {
         item_id: item.id,
         recipient: {

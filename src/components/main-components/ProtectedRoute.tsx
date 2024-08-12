@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginActions } from "../../store/login.slice";
-import { apiCall } from "../../utils";
+import { apiCall, ApiEndpoints } from "../../utils";
 import { useQuery } from "@tanstack/react-query";
 import { getAccessToken } from "../../utils/access-token";
 import Auth, { ResponseAuth } from "../../types/verify";
@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     queryKey: ["accesstoken"],
     queryFn: async () => {
       const response = await apiCall<ResponseAuth, Auth>({
-        endpoint: "/api/v1/auth/verify",
+        endpoint: ApiEndpoints.Verify,
         method: "POST",
         requestData: { access_token },
       });

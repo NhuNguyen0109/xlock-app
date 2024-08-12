@@ -1,7 +1,7 @@
 import "../../../assets/styles";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { apiCall } from "../../../utils";
+import { apiCall, ApiEndpoints } from "../../../utils";
 import useModal from "../../../utils/useModal";
 import FilterPopup from "../../filter/FilterPopup";
 import AccessCard from "./AccessCard";
@@ -25,7 +25,7 @@ const AccessHistory = () => {
     queryKey: ["history"],
     queryFn: async () => {
       const response = await apiCall<HistoryType[], undefined>({
-        endpoint: "/api/v1/history/filling",
+        endpoint: ApiEndpoints.GetHistory,
         method: "GET",
       });
       return response.data;

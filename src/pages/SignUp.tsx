@@ -15,7 +15,7 @@ import {
   Congratulations,
 } from "../components/signup-components";
 import { RootState } from "../store";
-import { apiCall, useSubmitLogin } from "../utils";
+import { apiCall, useSubmitLogin, ApiEndpoints } from "../utils";
 import { useNavigate } from "react-router-dom";
 import RegisterInfo, { ResponseRegisterInfo } from "../types/register-info";
 
@@ -40,7 +40,7 @@ const SignUp = () => {
     console.log(registerInfo);
     mutate({
       method: "POST",
-      endpoint: "/api/v1/auth/register",
+      endpoint: ApiEndpoints.Register,
       requestData: registerInfo,
     });
   };

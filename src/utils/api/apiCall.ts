@@ -1,4 +1,4 @@
-import { getAccessToken } from "./access-token";
+import { getAccessToken } from "../access-token";
 
 interface ApiCallParams<V> {
   endpoint: string;
