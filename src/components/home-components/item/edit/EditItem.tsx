@@ -1,6 +1,6 @@
 import "../../../../assets/styles/";
 import { useSelector } from "react-redux";
-import { useState, useLayoutEffect, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { RootState } from "../../../../store/index.ts";
 import InputFieldEdit from "../../../input-field/InputFieldEdit.tsx";
 import AccountType, { ShareItemType } from "../../../../types/item.ts";
@@ -27,7 +27,7 @@ const EditItem: React.FC<EdittingItem> = ({ cancel }) => {
   );
   const { isOpen, modalRef, closeModal, openModal } = useModal();
 
-  const { mutate, isError, isSuccess } = useMutation({
+  const { mutate, isError } = useMutation({
     mutationFn: apiCall<null, UpdatedItemType>,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
