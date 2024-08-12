@@ -1,9 +1,9 @@
-import "../../assets/styles";
-import AccessCard from "./AccessCard";
+import "../../../assets/styles/";
+import AccessCard from "../history/AccessCard";
 const DATA = [
   {
-    title: "Unknown device",
-    body: "Chrome",
+    device: "Unknown device",
+    browser: "Chrome",
     date: "10:30, 04 Jul 2024",
     with: [
       "nguyenvana@gmail.com",
@@ -12,8 +12,8 @@ const DATA = [
     ],
   },
   {
-    title: "Unknown device",
-    body: "Chrome",
+    device: "Unknown device",
+    browser: "Chrome",
     date: "10:30, 04 Jul 2024",
     with: ["nguyenvana@gmail.com"],
   },
@@ -25,9 +25,14 @@ const ItemShareHistory = () => {
       <div className="access-history-list w-full h-full bg-white flex flex-col gap-[6px] p-[12px] overflow-y-auto">
         {/* <div className="flex justify-between w-full test-border"> */}
         {DATA.map((item, index) => (
-          <div className="w-full flex justify-between">
+          <div key={index} className="w-full flex justify-between">
             <div className="w-[50%] ">
-              <AccessCard key={index} {...item} />
+              <AccessCard
+                key={index}
+                title={item.device}
+                body={item.browser}
+                date={item.date}
+              />
             </div>
             <div className="w-[50%] flex flex-col ">
               <p className="body-text-bold">With</p>

@@ -4,11 +4,6 @@ import ButtonType from "../../types/button";
 import InputFieldSubmit from "../input-field/InputFieldSubmit";
 import { useDispatch } from "react-redux";
 import { registerActions } from "../../store/register-info.slice";
-import requestHashPassword from "../../utils/browserCall/request.hash";
-import {
-  base64ToCryptoKey,
-  cryptoKeyToBase64,
-} from "../../utils/handleHassPassType";
 import "../../assets/styles/button.css";
 import "../../assets/styles/shadow.css";
 

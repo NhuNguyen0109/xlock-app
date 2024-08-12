@@ -1,17 +1,15 @@
-import React from "react";
+import "../../../assets/styles/";
 import { useSelector, useDispatch } from "react-redux";
-import "../../assets/styles/text.css";
-import "../../assets/styles/border.css";
-import { RootState } from "../../store/index.ts";
-import { itemActions } from "../../store/item.slice.ts";
-import ItemType from "../../types/item.ts";
+import { RootState } from "../../../store/index.ts";
+import { itemActions } from "../../../store/item.slice.ts";
+import ItemType from "../../../types/item.ts";
 
 const ItemCard: React.FC<ItemType> = (props) => {
   const dispatch = useDispatch();
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
-  const selected = selectedItem.id === props.id;
+  const selected = selectedItem?.id === props.id;
 
   const handleSelectItem = () => {
     dispatch(itemActions.selectItem({ ...props }));
@@ -28,8 +26,8 @@ const ItemCard: React.FC<ItemType> = (props) => {
         <div className="w-[32px] h-[32px] flex justify-center">
           <img
             src={`${
-              props.imageUrl
-                ? props.imageUrl
+              props.logo_url
+                ? props.logo_url
                 : "src/assets/images/DefaultLogo.png"
             }`}
             alt="DefaultLogo"
@@ -38,7 +36,7 @@ const ItemCard: React.FC<ItemType> = (props) => {
         </div>
         <div className="flex flex-col">
           <p className="body-text-bold">{props.name}</p>
-          <p className="body-text">{props.account}</p>
+          <p className="body-text">account {props.order}</p>
         </div>
       </div>
     </div>

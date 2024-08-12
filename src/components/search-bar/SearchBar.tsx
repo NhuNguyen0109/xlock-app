@@ -7,6 +7,7 @@ type SearchProps = {
 };
 
 const SearchBar: React.FC<SearchProps> = ({ data }) => {
+  console.log(data);
   return (
     <div>
       <input

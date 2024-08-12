@@ -1,6 +1,4 @@
-import React from "react";
-
-import "../../assets/styles/text.css";
+import "../../../assets/styles/";
 
 interface AccessCardProps {
   title: string;
@@ -24,13 +22,15 @@ const AccessCard: React.FC<AccessCardProps> = ({
           className=""
         />
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col items-start">
         <p className="body-text-bold">{title}</p>
-        <p className="body-text">{body}</p>
+        <p className="body-text">{isDigit(body) ? "account" + body : body}</p>
         <p className="body-text-light">{date}</p>
       </div>
     </div>
   );
 };
+
+const isDigit = (str: string): boolean => /^\d+$/.test(str);
 
 export default AccessCard;
