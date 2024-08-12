@@ -47,5 +47,6 @@ function concatenateData(
   initializationVector: string,
   salt: string
 ) {
+  // return `${initializationVector}::${salt}`;
   return `${initializationVector}::${salt}::${cipherText}`;
 }

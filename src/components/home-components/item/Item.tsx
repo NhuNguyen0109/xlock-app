@@ -21,8 +21,8 @@ const Item = () => {
     const fetchData = async () => {
       try {
         const decryptCreds = await getDecryptedCreds(
-          selectedItem?.enc_credentials ?? "",
-          selectedItem?.type ?? ""
+          selectedItem.enc_credentials,
+          selectedItem.type
         );
         setDecCreds(decryptCreds);
       } catch (error) {
@@ -72,7 +72,7 @@ const Item = () => {
             className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
             ref={modalRefShare}
           >
-            <SharePopup closeModal={closeModalShare} item={selectedItem} />
+            <SharePopup closeModal={closeModalShare} />
           </div>
         </div>
       )}
@@ -81,8 +81,8 @@ const Item = () => {
           <div className="w-[48px] h-[48px] flex justify-center">
             <img
               src={`${
-                selectedItem?.logo_url
-                  ? selectedItem?.logo_url
+                selectedItem.logo_url
+                  ? selectedItem.logo_url
                   : "src/assets/images/DefaultLogo.png"
               }`}
               alt="DefaultLogo"
@@ -90,7 +90,7 @@ const Item = () => {
           </div>
           <div className="flex flex-col">
             <p className="text-black text-2xl not-italic font-semibold leading-[normal]">
-              {selectedItem?.name}
+              {selectedItem.name}
             </p>
             <div className="flex gap-[2px]">
               <p className="text-black text-sm not-italic font-normal leading-[normal]">
@@ -152,7 +152,7 @@ const Item = () => {
           <div className="flex flex-col gap-[4px] my-[4px]">
             <InputFieldDisabled
               title=""
-              value={selectedItem?.site || ""}
+              value={selectedItem.site}
               src="src/assets/images/Link.png"
               alt="Link"
             />
@@ -163,13 +163,10 @@ const Item = () => {
             <p className="body-text-bold">Modification</p>
           </div>
           <div className="flex flex-col gap-[4px] my-[4px]">
-            <InputFieldDisabled
-              title="Created"
-              value={selectedItem?.added_at || ""}
-            />
+            <InputFieldDisabled title="Created" value={selectedItem.added_at} />
             <InputFieldDisabled
               title="Modified"
-              value={selectedItem?.updated_at || ""}
+              value={selectedItem.updated_at}
             />
           </div>
         </div>
