@@ -15,22 +15,20 @@ import {
   Congratulations,
 } from "../components/signup-components";
 import { RootState } from "../store";
-import { RegisterInfo } from "../store/register-info.slice";
-import { apiCall, useSubmitLogin } from "../utils";
+import { apiCall, useSubmitLogin, ApiEndpoints } from "../utils";
 import { useNavigate } from "react-router-dom";
+import RegisterInfo, { ResponseRegisterInfo } from "../types/register-info";
 
 const SignUp = () => {
   const [component, setComponent] = useState(0);
   const registerInfo = useSelector((state: RootState) => state.register);
-  const [vector, setVector] = useState<string>("");
   const submitLogin = useSubmitLogin();
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
-    mutationFn: apiCall<RegisterInfo>,
+    mutationFn: apiCall<ResponseRegisterInfo, RegisterInfo>,
     onSuccess: (data) => {
       console.log(data);
-
       handleNextStep();
     },
     onError: (error) => {
@@ -42,7 +40,7 @@ const SignUp = () => {
     console.log(registerInfo);
     mutate({
       method: "POST",
-      endpoint: "/api/v1/auth/create",
+      endpoint: ApiEndpoints.Register,
       requestData: registerInfo,
     });
   };
@@ -53,8 +51,6 @@ const SignUp = () => {
       await submitLogin({
         email: registerInfo.email,
         password: registerInfo.password,
-        salt: registerInfo.rsa_key_pairs.salt,
-        vector,
       });
     } catch (error) {
       console.error("Login failed:", error);
@@ -78,11 +74,7 @@ const SignUp = () => {
     <CreateAccount key="create-account" handleNextStep={handleNextStep} />,
     <CreatePassword key="create-password" handleNextStep={handleNextStep} />,
     <CreateProfile key="create-profile" handleNextStep={handleNextStep} />,
-    <GenerateKey
-      key="generate-key"
-      handleNextStep={handleSubmit}
-      setVector={(vector) => setVector(vector)}
-    />,
+    <GenerateKey key="generate-key" handleNextStep={handleSubmit} />,
     <Tutorial key="tutorial" handleNextStep={handleLogin} />,
     <Congratulations key="congratulations" handleNextStep={handleNavigate} />,
   ];

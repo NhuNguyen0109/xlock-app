@@ -5,10 +5,10 @@ import { RootState } from "../../store";
 import { useEffect } from "react";
 import { registerActions } from "../../store/register-info.slice";
 import requestKeyPair from "../../utils/browserCall/request.key.pair";
-import requestEncryptPrivateKey from "../../utils/browserCall/request.encrypt.key";
-import { base64ToCryptoKey } from "../../utils/handleHassPassType";
+import requestEncrypt from "../../utils/browserCall/request.encrypt.key";
 import ButtonType from "../../types/button";
 import requestHashPassword from "../../utils/browserCall/request.hash";
+import { storeConcatStr } from "../../utils/concat-text";
 
 const GenerateKey: React.FC<ButtonType> = ({ handleNextStep, setVector }) => {
   const dispatch = useDispatch();
@@ -18,8 +18,12 @@ const GenerateKey: React.FC<ButtonType> = ({ handleNextStep, setVector }) => {
     const generateKeyPair = async () => {
       try {
         const { privateKey, publicKey } = await requestKeyPair();
-        const { encryptedPrivateKey, initializationVector, salt } =
-          await requestEncryptPrivateKey(privateKey, password);
+        const { concatenatedData, salt } = await requestEncrypt(
+          privateKey,
+          password
+        );
+
+        storeConcatStr(concatenatedData);
 
         const { password: hashedPassword } = await requestHashPassword(
           password,
@@ -29,7 +33,7 @@ const GenerateKey: React.FC<ButtonType> = ({ handleNextStep, setVector }) => {
         dispatch(
           registerActions.setRsaKeyPairs({
             public: publicKey,
-            enc_pri: encryptedPrivateKey,
+            enc_pri: concatenatedData,
             salt,
           })
         );
@@ -38,7 +42,6 @@ const GenerateKey: React.FC<ButtonType> = ({ handleNextStep, setVector }) => {
             password: hashedPassword,
           })
         );
-        setVector?.(initializationVector);
       } catch (error) {
         console.error("Error generating key pair:", error);
       }

@@ -1,8 +1,9 @@
-export default function requestEncryptPrivateKey(
+export default function requestEncrypt(
   privateKey: string,
   password: string
 ): Promise<{
-  encryptedPrivateKey: string;
+  concatenatedData: string;
+  encrypted: string;
   salt: string;
   initializationVector: string;
 }> {
@@ -22,8 +23,14 @@ export default function requestEncryptPrivateKey(
         initializationVector: string;
       }) => {
         if (res.success) {
+          const concatenatedData = concatenateData(
+            res.encryptedPrivateKey,
+            res.initializationVector,
+            res.salt
+          );
           resolve({
-            encryptedPrivateKey: res.encryptedPrivateKey,
+            concatenatedData,
+            encrypted: res.encryptedPrivateKey,
             salt: res.salt,
             initializationVector: res.initializationVector,
           });
@@ -33,4 +40,13 @@ export default function requestEncryptPrivateKey(
       }
     );
   });
+}
+
+function concatenateData(
+  cipherText: string,
+  initializationVector: string,
+  salt: string
+) {
+  // return `${initializationVector}::${salt}`;
+  return `${initializationVector}::${salt}::${cipherText}`;
 }
