@@ -1,5 +1,4 @@
 import "../assets/styles/border.css";
-import { useState, useEffect, useRef } from "react";
 import useModal from "../utils/useModal";
 import Header from "../components/main-components/Header";
 import CurrentDevice from "../components/home-components/device/CurrentDevice";
