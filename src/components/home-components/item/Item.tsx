@@ -41,12 +41,12 @@ const Item = () => {
     openModal: openModalShare,
   } = useModal();
 
-  const {
-    modalRef: modalRefDelete,
-    isOpen: isOpenDelete,
-    closeModal: closeModalDelete,
-    openModal: openModalDelete,
-  } = useModal();
+  // const {
+  //   modalRef: modalRefDelete,
+  //   isOpen: isOpenDelete,
+  //   closeModal: closeModalDelete,
+  //   openModal: openModalDelete,
+  // } = useModal();
 
   const handleReveal = () => {
     setIsReveal(!isReveal);
@@ -55,7 +55,7 @@ const Item = () => {
   const setOption = (option: string) => {
     if (option === "edit") {
     }
-    if (option === "delete") openModalDelete();
+    // if (option === "delete") openModalDelete();
     if (option === "share") openModalShare();
     closeModal();
   };

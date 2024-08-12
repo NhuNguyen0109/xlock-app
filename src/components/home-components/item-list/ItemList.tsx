@@ -74,7 +74,7 @@ const ItemList = () => {
         </div>
       </div>
       <div className="access-history-list w-full h-full bg-white flex flex-col gap-[6px] mt-[6px]">
-        {itemsToRender.map((item, index) => (
+        {itemsToRender.map((item) => (
           <ItemCard key={item.id} {...item} />
         ))}
       </div>

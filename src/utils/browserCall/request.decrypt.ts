@@ -1,8 +1,7 @@
 export default function requestDecrypt(
   text: string,
   concatStr: string,
-  type_creds: string,
-  access_token?: string
+  type_creds: string
 ): Promise<{
   plaintext: string;
 }> {
