@@ -42,7 +42,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     }
   }
 
-  return null; // You can add a loading spinner here if needed
+  return null;
+  // return <>{children}</>;
 };
 
 export default ProtectedRoute;

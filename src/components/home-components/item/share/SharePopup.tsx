@@ -133,10 +133,9 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
   return (
     <div className="w-[432px] h-fit rounded-[12px] bg-yellow z-[5] box-shadow overflow-hidden ">
       {isSuccess && <StatusPopup success={true} body="Shared successfully" />}
-      {isError ||
-        (errorCallingExt && (
-          <StatusPopup success={false} body="Fail to share item" />
-        ))}
+      {(isError || errorCallingExt) && (
+        <StatusPopup success={false} body="Fail to share item" />
+      )}
       {!isSuccess && !isError && !errorCallingExt && (
         <>
           <div className="header h-[48px] w-full bg-[#E6F1FD] flex items-center px-[20px] justify-between">
