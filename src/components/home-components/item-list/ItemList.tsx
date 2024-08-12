@@ -35,6 +35,7 @@ let DATA: AccountType[] = [
 
 const ItemList = () => {
   const dispatch = useDispatch();
+
   let itemsToRender = addOrderToAccounts(DATA);
 
   const { data, isSuccess, isError } = useQuery({
@@ -63,7 +64,7 @@ const ItemList = () => {
     //   dispatch(itemActions.selectItem(DATA[0]));
     // }
     dispatch(itemActions.selectItem(itemsToRender[0]));
-  }, [dispatch, data]);
+  }, [dispatch]);
 
   return (
     <div className="item-list-section flex flex-col flex-grow">
