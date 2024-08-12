@@ -10,7 +10,7 @@ import ButtonType from "../../types/button";
 import requestHashPassword from "../../utils/browserCall/request.hash";
 import { storeConcatStr } from "../../utils/concat-text";
 
-const GenerateKey: React.FC<ButtonType> = ({ handleNextStep, setVector }) => {
+const GenerateKey: React.FC<ButtonType> = ({ handleNextStep }) => {
   const dispatch = useDispatch();
   const password = useSelector((state: RootState) => state.register.password);
 

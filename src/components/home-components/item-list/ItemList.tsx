@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { itemActions } from "../../../store/item.slice.ts";
-import apiCall from "../../../utils/apiCall.ts";
+import { apiCall, ApiEndpoints } from "../../../utils/index.ts";
 import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
 
@@ -42,7 +42,7 @@ const ItemList = () => {
     queryKey: ["items"],
     queryFn: async () => {
       const response = await apiCall<AccountType[], undefined>({
-        endpoint: "/api/v1/items/",
+        endpoint: ApiEndpoints.GetListItems,
         method: "GET",
       });
       return response.data;
@@ -64,7 +64,7 @@ const ItemList = () => {
     //   dispatch(itemActions.selectItem(DATA[0]));
     // }
     dispatch(itemActions.selectItem(itemsToRender[0]));
-  }, [dispatch, data]);
+  }, [dispatch]);
 
   return (
     <div className="item-list-section flex flex-col flex-grow">

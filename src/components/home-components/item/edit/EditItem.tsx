@@ -8,10 +8,12 @@ import getDecryptedCreds, {
   DecryptedCreds,
 } from "../../../../utils/decrypt-creds.ts";
 import { useMutation } from "@tanstack/react-query";
-import apiCall from "../../../../utils/apiCall.ts";
+import { apiCall, ApiEndpoints } from "../../../../utils/index.ts";
 import UpdatedItemType from "../../../../types/update-item.ts";
 import requestEncrypt from "../../../../utils/browserCall/request.encrypt.key.ts";
 import { queryClient } from "../../../../App.tsx";
+import StatusPopup from "../../../status-popup/StatusPopup.tsx";
+import useModal from "../../../../utils/useModal.ts";
 
 interface EdittingItem {
   cancel(): void;
@@ -23,12 +25,17 @@ const EditItem: React.FC<EdittingItem> = ({ cancel }) => {
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
+  const { isOpen, modalRef, closeModal, openModal } = useModal();
 
-  const { mutate, isError } = useMutation({
+  const { mutate, isError, isSuccess } = useMutation({
     mutationFn: apiCall<null, UpdatedItemType>,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
-      cancel(); //Delete this if calling actual api
+      openModal();
+      setTimeout(() => {
+        closeModal();
+        cancel();
+      }, 700);
     },
   });
 
@@ -95,7 +102,7 @@ const EditItem: React.FC<EdittingItem> = ({ cancel }) => {
 
     if (Object.keys(updatedData).length > 0) {
       mutate({
-        endpoint: `/api/v1/items/update/${selectedItem.id}`,
+        endpoint: `${ApiEndpoints.UpdateItem}${selectedItem.id}`,
         method: "PATCH",
         requestData: updatedData,
       });
@@ -104,6 +111,21 @@ const EditItem: React.FC<EdittingItem> = ({ cancel }) => {
 
   return (
     <>
+      {isOpen && (
+        <div className="blur-bg">
+          <div
+            className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
+            ref={modalRef}
+          >
+            <StatusPopup
+              success={true}
+              body="Shared successfully"
+              container={true}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="header w-full h-[90px] bg-white flex items-center justify-between p-[20px] card-border">
         <div className="h-full flex items-center gap-[20px] ">
           <div className="w-[48px] h-[48px] flex justify-center">

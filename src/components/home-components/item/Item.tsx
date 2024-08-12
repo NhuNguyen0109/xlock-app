@@ -50,12 +50,12 @@ const Item = () => {
     openModal: openModalShare,
   } = useModal();
 
-  const {
-    modalRef: modalRefDelete,
-    isOpen: isOpenDelete,
-    closeModal: closeModalDelete,
-    openModal: openModalDelete,
-  } = useModal();
+  // const {
+  //   modalRef: modalRefDelete,
+  //   isOpen: isOpenDelete,
+  //   closeModal: closeModalDelete,
+  //   openModal: openModalDelete,
+  // } = useModal();
 
   const handleReveal = () => {
     setIsReveal(!isReveal);
@@ -65,7 +65,7 @@ const Item = () => {
     if (option === "edit") {
       setIsEditting(true);
     }
-    if (option === "delete") openModalDelete();
+    // if (option === "delete") openModalDelete();
     if (option === "share") openModalShare();
     closeModal();
   };
@@ -82,7 +82,7 @@ const Item = () => {
             className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
             ref={modalRefShare}
           >
-            <SharePopup closeModal={closeModalShare} item={selectedItem} />
+            <SharePopup closeModal={closeModalShare} />
           </div>
         </div>
       )}
