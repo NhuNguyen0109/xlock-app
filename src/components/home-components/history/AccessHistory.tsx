@@ -47,7 +47,7 @@ const AccessHistory = () => {
           onClick={isOpen ? closeModal : openModal}
           ref={buttonRef}
         >
-          <img src="/images/More.png" alt="More" className="" />
+          <img src="src/assets/images/More.png" alt="More" className="" />
         </div>
       </div>
       <div className="access-history-list w-full h-full bg-white flex flex-col gap-[6px] p-[12px] overflow-y-auto relative z-[1]">

@@ -71,7 +71,7 @@ const ItemList = () => {
       <div className="header w-full h-[48px] p-[12px] bg-[#E6F1FD] flex items-center justify-between">
         <SearchBar data={itemsToRender} />
         <div className="w-[24px] h-[24px] flex justify-center items-center">
-          <img src="/images/New.png" alt="More" className="" />
+          <img src="src/assets/images/New.png" alt="More" className="" />
         </div>
       </div>
       <div className="access-history-list w-full h-full bg-white flex flex-col gap-[6px] mt-[6px]">

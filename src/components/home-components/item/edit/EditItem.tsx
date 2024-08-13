@@ -133,7 +133,7 @@ const EditItem: React.FC<EdittingItem> = ({ cancel }) => {
               src={`${
                 selectedItem?.logo_url
                   ? selectedItem?.logo_url
-                  : "/images/DefaultLogo.png"
+                  : "src/assets/images/DefaultLogo.png"
               }`}
               alt="DefaultLogo"
             />
