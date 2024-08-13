@@ -15,7 +15,7 @@ const Header = () => {
       <div className="w-full bg-yellow h-[100px] px-[40px] py-[20px] flex justify-between items-center bg-white">
         <div className="xlock-logo h-fit w-fit flex items-center">
           <img
-            src="src/assets/images/Xlock_logo.png"
+            src="/images/Xlock_logo.png"
             alt="XLock_logo"
             className="scale-[0.8]"
           />

@@ -12,7 +12,7 @@ const MenuPopup: React.FC<MenuPopupOptions> = ({ setOption }) => {
         onClick={() => setOption("edit")}
       >
         <div className="w-[16px] h-[16px] flex justify-center">
-          <img src="src/assets/images/Edit.png" alt="Edit" className="" />
+          <img src="/images/Edit.png" alt="Edit" className="" />
         </div>
         <p className="body-text">Edit</p>
       </div>
@@ -21,7 +21,7 @@ const MenuPopup: React.FC<MenuPopupOptions> = ({ setOption }) => {
         onClick={() => setOption("share")}
       >
         <div className="w-[16px] h-[16px] flex justify-center">
-          <img src="src/assets/images/Share.png" alt="Share" className="" />
+          <img src="/images/Share.png" alt="Share" className="" />
         </div>
         <p className="body-text">Share</p>
       </div>
@@ -31,7 +31,7 @@ const MenuPopup: React.FC<MenuPopupOptions> = ({ setOption }) => {
       >
         <div className="w-[16px] h-[16px] flex justify-center">
           <img
-            src="src/assets/images/Trash_bin.png"
+            src="/images/Trash_bin.png"
             alt="Delete"
             className=""
           />

@@ -13,12 +13,12 @@ const CurrentDevice: React.FC<{
           className="w-[24px] h-[24px] flex justify-center items-center"
           onClick={openModal}
         >
-          <img src="src/assets/images/OpenTab.png" alt="OpenTab" className="" />
+          <img src="/images/OpenTab.png" alt="OpenTab" className="" />
         </div>
       </div>
       <div className="device-card w-full h-[62px] bg-white flex gap-[12px] p-[12px]">
         <div className="w-[36px] h-[36px] flex justify-center">
-          <img src="src/assets/images/Device.png" alt="Device" className="" />
+          <img src="/images/Device.png" alt="Device" className="" />
         </div>
         <div className="flex flex-col">
           <p className="body-text-bold">{userAgent?.device}</p>

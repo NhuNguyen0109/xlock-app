@@ -57,7 +57,7 @@ const DeviceBrowserHistory: React.FC<{
           className="w-[24px] h-[24px] flex justify-center items-center"
           onClick={closeModal}
         >
-          <img src="src/assets/images/Close.png" alt="Close" className="" />
+          <img src="/images/Close.png" alt="Close" className="" />
         </div>
       </div>
       <div className="content p-[20px] flex flex-col gap-[12px]">
