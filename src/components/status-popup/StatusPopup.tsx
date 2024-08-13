@@ -24,8 +24,8 @@ const StatusPopup: React.FC<Status> = ({
           <img
             src={`${
               success
-                ? "/images/SuccessStatus.png"
-                : "/images/FailedStatus.png"
+                ? "src/assets/images/SuccessStatus.png"
+                : "src/assets/images/FailedStatus.png"
             }`}
             alt="Status"
             className=""

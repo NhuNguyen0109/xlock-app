@@ -95,7 +95,7 @@ const Item = () => {
                   src={`${
                     selectedItem.logo_url
                       ? selectedItem.logo_url
-                      : "/images/DefaultLogo.png"
+                      : "src/assets/images/DefaultLogo.png"
                   }`}
                   alt="DefaultLogo"
                 />
@@ -121,7 +121,7 @@ const Item = () => {
               onClick={isOpen ? closeModal : openModal}
               ref={buttonRef}
             >
-              <img src="/images/More.png" alt="More" className="" />
+              <img src="src/assets/images/More.png" alt="More" className="" />
             </div>
           </div>
           <div className="body flex flex-col items-center overflow-auto">
@@ -144,14 +144,14 @@ const Item = () => {
                 <InputFieldDisabled
                   title="Credentials"
                   value={isReveal ? decCreds?.credential ?? "" : "*****"}
-                  src="/images/Copy.png"
+                  src="src/assets/images/Copy.png"
                   alt="Copy"
                   actualValue={decCreds?.credential ?? ""}
                 />
                 <InputFieldDisabled
                   title="Password"
                   value={isReveal ? decCreds?.password ?? "" : "*****"}
-                  src="/images/Copy.png"
+                  src="src/assets/images/Copy.png"
                   alt="Copy"
                   actualValue={decCreds?.password ?? ""}
                 />
@@ -165,7 +165,7 @@ const Item = () => {
                 <InputFieldDisabled
                   title=""
                   value={selectedItem.site}
-                  src="/images/Link.png"
+                  src="src/assets/images/Link.png"
                   alt="Link"
                 />
               </div>

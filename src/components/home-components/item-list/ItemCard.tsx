@@ -28,7 +28,7 @@ const ItemCard: React.FC<ItemType> = (props) => {
             src={`${
               props.logo_url
                 ? props.logo_url
-                : "/images/DefaultLogo.png"
+                : "src/assets/images/DefaultLogo.png"
             }`}
             alt="DefaultLogo"
             className=""

@@ -7,7 +7,7 @@ const Congratulations: React.FC<ButtonType> = ({ handleNextStep }) => {
   return (
     <div className="flex flex-col items-center gap-[24px] relative pt-[30px]">
       <div className="h-[102px] w-[102px] p-[24px] box-shadow rounded-[99px] absolute top-[-50%]">
-        <img src="/images/logo.png" alt="logo" />
+        <img src="src/assets/images/logo.png" alt="logo" />
       </div>
 
       <p className="text-black text-sm not-italic font-medium leading-[normal] text-center mt-[18px]">
