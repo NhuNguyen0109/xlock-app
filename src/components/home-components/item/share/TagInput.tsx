@@ -52,7 +52,7 @@ const TagInput: React.FC = () => {
               className="w-[14px] h-[14px] flex justify-center items-center "
               onClick={() => handleRemoveTag(index)}
             >
-              <img src="src/assets/images/CloseBlue.png" alt="Close" />
+              <img src="/images/CloseBlue.png" alt="Close" />
             </div>
           </span>
         ))}
