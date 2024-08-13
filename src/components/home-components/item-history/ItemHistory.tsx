@@ -75,7 +75,7 @@ const ItemHistory = () => {
           >
             {isOpen && (
               <img
-                src="src/assets/images/More.png"
+                src="/images/More.png"
                 alt="More"
                 className=""
                 onClick={openFilter ? closeModal : openModal}
@@ -87,7 +87,7 @@ const ItemHistory = () => {
             onClick={CloseHistory}
           >
             <img
-              src="src/assets/images/CloseTab.png"
+              src="/images/CloseTab.png"
               alt="CloseTab"
               className={`${!isOpen ? "rotate-180" : null}`}
             />

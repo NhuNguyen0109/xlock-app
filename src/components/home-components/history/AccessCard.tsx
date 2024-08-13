@@ -17,7 +17,7 @@ const AccessCard: React.FC<AccessCardProps> = ({
     <div className="device-card w-full h-[62px] bg-white flex gap-[12px]">
       <div className="w-[32px] h-[32px] flex justify-center">
         <img
-          src={`${imageUrl ? imageUrl : "src/assets/images/DefaultLogo.png"}`}
+          src={`${imageUrl ? imageUrl : "/images/DefaultLogo.png"}`}
           alt="DefaultLogo"
           className=""
         />

@@ -144,7 +144,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
               className="w-[24px] h-[24px] flex justify-center items-center"
               onClick={closeModal}
             >
-              <img src="src/assets/images/Close.png" alt="Close" className="" />
+              <img src="/images/Close.png" alt="Close" className="" />
             </div>
           </div>
           <div className="content p-[20px] flex flex-col gap-[28px]">
@@ -154,7 +154,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
                   src={`${
                     item.logo_url
                       ? item.logo_url
-                      : "src/assets/images/DefaultLogo.png"
+                      : "/images/DefaultLogo.png"
                   }`}
                   alt="DefaultLogo"
                   className=""
@@ -195,7 +195,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
                         onClick={() => handleRemoveTag(index)}
                       >
                         <img
-                          src="src/assets/images/CloseBlue.png"
+                          src="/images/CloseBlue.png"
                           alt="Close"
                         />
                       </div>
