@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { loginActions } from "../store/login.slice";
-import { apiCall } from "../utils";
+import { apiCall, ApiEndpoints } from "../utils";
 import requestSendData from "./browserCall/request.send.data";
 import { getConcatStr } from "./concat-text";
 import { storeAccessToken } from "./access-token";
@@ -12,7 +12,7 @@ export const useSubmitLogin = () => {
   return ({ email, password }: LoginType) => {
     apiCall<ResponseLoginType, LoginType>({
       method: "POST",
-      endpoint: "/api/v1/auth/login",
+      endpoint: ApiEndpoints.Login,
       requestData: { email, password },
     })
       .then((response) => {

@@ -16,8 +16,8 @@ const InputFieldDisabled: React.FC<DisabledInputType> = ({
 
   const handleCopy = () => {
     copyContent(actualValue ?? value);
-    setIsCopy("src/assets/images/Success.png");
-    setTimeout(() => setIsCopy(src || undefined), 2000);
+    setIsCopy("/images/Success.png");
+    setTimeout(() => setIsCopy(src || undefined), 1000);
   };
 
   return (

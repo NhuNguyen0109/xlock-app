@@ -1,6 +1,6 @@
 export default function requestEncrypt(
-  privateKey: string,
-  password: string
+  key: string,
+  password?: string
 ): Promise<{
   concatenatedData: string;
   encrypted: string;
@@ -13,8 +13,8 @@ export default function requestEncrypt(
       id,
       {
         type: "REQUEST_ENCRYPT_PRIVATE_KEY",
-        privateKey: privateKey,
-        password: password,
+        privateKey: key,
+        ...(password && { password }),
       },
       (res: {
         success: boolean;
@@ -47,5 +47,6 @@ function concatenateData(
   initializationVector: string,
   salt: string
 ) {
+  // return `${initializationVector}::${salt}`;
   return `${initializationVector}::${salt}::${cipherText}`;
 }

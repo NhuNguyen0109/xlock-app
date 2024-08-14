@@ -1,7 +1,9 @@
+// vector::salt::enc_pri
+
 export const storeConcatStr = (concatStr: string): void => {
-  sessionStorage.setItem("concatStr", concatStr);
+  localStorage.setItem("concatStr", concatStr);
 };
 
 export const getConcatStr = (): string => {
-  return sessionStorage.getItem("concatStr") ?? "";
+  return localStorage.getItem("concatStr") ?? "";
 };

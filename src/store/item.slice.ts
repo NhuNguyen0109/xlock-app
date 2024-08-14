@@ -2,12 +2,22 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AccountType from "../types/item";
 
 export interface ItemState {
-  selectedItem: AccountType | null;
+  selectedItem: AccountType;
 }
 
 // Define the initial state
 const initialState: ItemState = {
-  selectedItem: null,
+  selectedItem: {
+    name: "",
+    site: "",
+    description: "",
+    enc_credentials: "",
+    logo_url: "",
+    id: "",
+    added_at: "",
+    updated_at: "",
+    type: "",
+  },
 };
 
 const itemSlice = createSlice({

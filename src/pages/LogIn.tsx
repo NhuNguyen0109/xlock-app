@@ -5,6 +5,7 @@ import { Header } from "../components/main-components";
 import { useSubmitLogin } from "../utils";
 import { useNavigate } from "react-router-dom";
 import InputFieldSubmit from "../components/input-field/InputFieldSubmit";
+import requestHashPassword from "../utils/browserCall/request.hash";
 
 const LogIn = () => {
   const submitLogin = useSubmitLogin();
@@ -22,10 +23,13 @@ const LogIn = () => {
     }));
   };
   const handleLogin = async () => {
+    const { password: hashedPassword } = await requestHashPassword(
+      formData.password
+    );
     try {
       await submitLogin({
         email: formData.email,
-        password: formData.password,
+        password: hashedPassword,
       });
       handleNavigate();
     } catch (error) {
@@ -83,7 +87,7 @@ const LogIn = () => {
               <button className="button-3 font-[500] box-shadow w-[352px] h-[40px] flex items-center justify-center gap-[16px]">
                 <div className="w-[20px] h-[20px] flex justify-center">
                   <img
-                    src="src/assets/images/Google.png"
+                    src="/images/Google.png"
                     alt="Device"
                     className=""
                   />

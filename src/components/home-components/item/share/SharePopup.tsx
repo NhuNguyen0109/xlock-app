@@ -1,8 +1,9 @@
 import { useState, useLayoutEffect } from "react";
+import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
-import AccountType from "../../../../types/item";
+import { RootState } from "../../../../store";
 import "../../../../assets/styles";
-import apiCall from "../../../../utils/apiCall";
+import { apiCall, ApiEndpoints } from "../../../../utils";
 import ShareItemType, {
   ResponseCreateShareItem,
   ResponseShareItemType,
@@ -15,12 +16,13 @@ import asyncWithErrorHandler from "../../../../utils/errorHandler";
 
 interface SharePopup {
   closeModal(): void;
-  item: AccountType | null;
 }
 
-const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
+const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
+  const item = useSelector((state: RootState) => state.item.selectedItem);
   const [tags, setTags] = useState<string[]>([]); //multiple sharing
   const [inputValue, setInputValue] = useState<string>("");
+  const [errorCallingExt, setErrorCallingExt] = useState(false);
 
   const {
     mutate: mutateCreate,
@@ -28,6 +30,8 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
     isError,
   } = useMutation({
     mutationFn: apiCall<ResponseCreateShareItem, CreateShareItem>,
+    onSuccess: () => console.log("Successfully created shared item"),
+    onError: () => console.log("Failed to created shared item"),
   });
 
   const { mutate } = useMutation({
@@ -42,7 +46,10 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
         "Failed to decrypt credentials"
       );
 
-      if (!decryptedCreds) return;
+      if (!decryptedCreds) {
+        setErrorCallingExt(true);
+        return;
+      }
 
       const { raw_creds } = decryptedCreds;
 
@@ -52,14 +59,17 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
         return response.encrypted;
       }, "Failed to encrypt credentials");
 
-      if (!enc_credentials) return;
+      if (!enc_credentials) {
+        setErrorCallingExt(true);
+        return;
+      }
 
       // Create share item
       mutateCreate({
         method: "POST",
-        endpoint: "/api/v1/items/share/create",
+        endpoint: ApiEndpoints.CreateShareItem,
         requestData: {
-          item_id: item?.id || "",
+          item_id: item.id,
           recipient: {
             email: tags[0],
           },
@@ -75,9 +85,9 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
   const handleShare = () => {
     mutate({
       method: "POST",
-      endpoint: "/api/v1/items/share",
+      endpoint: ApiEndpoints.ShareItem,
       requestData: {
-        item_id: item?.id || "",
+        item_id: item.id,
         recipient: {
           email: tags[0],
         },
@@ -86,14 +96,18 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
   };
 
   useLayoutEffect(() => {
-    if (isSuccess || isError) {
+    if (isSuccess || isError || errorCallingExt) {
       const timer = setTimeout(() => {
         closeModal();
+        setErrorCallingExt(false);
       }, 700);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        setErrorCallingExt(false);
+      };
     }
-  }, [isSuccess, isError, closeModal]);
+  }, [isSuccess, isError, errorCallingExt, closeModal]);
 
   const handleRemoveTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
@@ -119,8 +133,10 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
   return (
     <div className="w-[432px] h-fit rounded-[12px] bg-white z-[5] box-shadow overflow-hidden ">
       {isSuccess && <StatusPopup success={true} body="Shared successfully" />}
-      {isError && <StatusPopup success={false} body="Fail to share item" />}
-      {!isSuccess && !isError && (
+      {(isError || errorCallingExt) && (
+        <StatusPopup success={false} body="Fail to share item" />
+      )}
+      {!isSuccess && !isError && !errorCallingExt && (
         <>
           <div className="header h-[48px] w-full bg-[#E6F1FD] flex items-center px-[20px] justify-between">
             <p className="title">Your Devices and Browsers</p>
@@ -128,7 +144,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
               className="w-[24px] h-[24px] flex justify-center items-center"
               onClick={closeModal}
             >
-              <img src="src/assets/images/Close.png" alt="Close" className="" />
+              <img src="/images/Close.png" alt="Close" className="" />
             </div>
           </div>
           <div className="content p-[20px] flex flex-col gap-[28px]">
@@ -136,16 +152,16 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
               <div className="w-[32px] h-[32px] flex justify-center">
                 <img
                   src={`${
-                    item?.logo_url
-                      ? item?.logo_url
-                      : "src/assets/images/DefaultLogo.png"
+                    item.logo_url
+                      ? item.logo_url
+                      : "/images/DefaultLogo.png"
                   }`}
                   alt="DefaultLogo"
                   className=""
                 />
               </div>
               <div className="flex flex-col">
-                <p className="body-text-bold">{item?.name}</p>
+                <p className="body-text-bold">{item.name}</p>
                 <p className="body-text">account {item?.order}</p>
               </div>
             </div>
@@ -155,7 +171,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
               </p>
               <div id="emailInputContainer" className="w-full">
                 <input
-                  className="border-solid border-[2px] border-[#D1D3D3] w-full h-[40px] bg-white px-[12px] rounded-[6px] body-text"
+                  className="border-solid border-[2px] border-[#D1D3D3] w-full h-[40px] bg-white px-[12px] rounded-[6px] body-text focus:outline-[#0570EB]"
                   // autoFocus
                   placeholder="Email address or Username"
                   value={inputValue}
@@ -179,7 +195,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal, item }) => {
                         onClick={() => handleRemoveTag(index)}
                       >
                         <img
-                          src="src/assets/images/CloseBlue.png"
+                          src="/images/CloseBlue.png"
                           alt="Close"
                         />
                       </div>

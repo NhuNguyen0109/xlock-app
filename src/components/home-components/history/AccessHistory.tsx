@@ -1,7 +1,7 @@
 import "../../../assets/styles";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { apiCall } from "../../../utils";
+import { apiCall, ApiEndpoints } from "../../../utils";
 import useModal from "../../../utils/useModal";
 import FilterPopup from "../../filter/FilterPopup";
 import AccessCard from "./AccessCard";
@@ -25,7 +25,7 @@ const AccessHistory = () => {
     queryKey: ["history"],
     queryFn: async () => {
       const response = await apiCall<HistoryType[], undefined>({
-        endpoint: "/api/v1/history/filling",
+        endpoint: ApiEndpoints.GetHistory,
         method: "GET",
       });
       return response.data;
@@ -47,7 +47,7 @@ const AccessHistory = () => {
           onClick={isOpen ? closeModal : openModal}
           ref={buttonRef}
         >
-          <img src="src/assets/images/More.png" alt="More" className="" />
+          <img src="/images/More.png" alt="More" className="" />
         </div>
       </div>
       <div className="access-history-list w-full h-full bg-white flex flex-col gap-[6px] p-[12px] overflow-y-auto relative z-[1]">

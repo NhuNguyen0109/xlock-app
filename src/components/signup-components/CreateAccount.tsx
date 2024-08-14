@@ -60,7 +60,7 @@ const CreateAccount: React.FC<ButtonType> = ({ handleNextStep }) => {
         <p className="body-text text-xs">Or</p>
         <button className="button-3 font-[500] box-shadow w-[352px] h-[40px] flex items-center justify-center gap-[16px]">
           <div className="w-[20px] h-[20px] flex justify-center">
-            <img src="src/assets/images/Google.png" alt="Device" className="" />
+            <img src="/images/Google.png" alt="Device" className="" />
           </div>
           Sign up with Google
         </button>

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { itemActions } from "../../../store/item.slice.ts";
-import apiCall from "../../../utils/apiCall.ts";
+import { apiCall, ApiEndpoints } from "../../../utils/index.ts";
 import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
 
@@ -35,13 +35,14 @@ let DATA: AccountType[] = [
 
 const ItemList = () => {
   const dispatch = useDispatch();
+
   let itemsToRender = addOrderToAccounts(DATA);
 
   const { data, isSuccess, isError } = useQuery({
     queryKey: ["items"],
     queryFn: async () => {
       const response = await apiCall<AccountType[], undefined>({
-        endpoint: "/api/v1/items/",
+        endpoint: ApiEndpoints.GetListItems,
         method: "GET",
       });
       console.log("success fetching items");
@@ -64,14 +65,14 @@ const ItemList = () => {
     //   dispatch(itemActions.selectItem(DATA[0]));
     // }
     dispatch(itemActions.selectItem(itemsToRender[0]));
-  }, [dispatch, data]);
+  }, [dispatch]);
 
   return (
     <div className="item-list-section flex flex-col flex-grow">
       <div className="header w-full h-[48px] p-[12px] bg-[#E6F1FD] flex items-center justify-between">
         <SearchBar data={itemsToRender} />
         <div className="w-[24px] h-[24px] flex justify-center items-center">
-          <img src="src/assets/images/New.png" alt="More" className="" />
+          <img src="/images/New.png" alt="More" className="" />
         </div>
       </div>
       <div className="access-history-list w-full h-full bg-white flex flex-col gap-[6px] mt-[6px]">

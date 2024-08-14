@@ -1,7 +1,8 @@
 import "../../../assets/styles";
 import { useQuery } from "@tanstack/react-query";
 import DeviceCard from "./DeviceCard";
-import { apiCall } from "../../../utils";
+import DeviceType from "../../../types/device";
+import { apiCall, ApiEndpoints } from "../../../utils";
 
 const DATA = [
   {
@@ -36,8 +37,8 @@ const DeviceBrowserHistory: React.FC<{
   const { data, isError } = useQuery({
     queryKey: ["devices"],
     queryFn: async () => {
-      const response = await apiCall({
-        endpoint: "api/v1/history/devices",
+      const response = await apiCall<DeviceType[]>({
+        endpoint: ApiEndpoints.GetDeviceHistory,
         method: "GET",
       });
       return response.data;
@@ -56,11 +57,13 @@ const DeviceBrowserHistory: React.FC<{
           className="w-[24px] h-[24px] flex justify-center items-center"
           onClick={closeModal}
         >
-          <img src="src/assets/images/Close.png" alt="Close" className="" />
+          <img src="/images/Close.png" alt="Close" className="" />
         </div>
       </div>
       <div className="content p-[20px] flex flex-col gap-[12px]">
-        {data ?? DATA.map((item) => <DeviceCard key={item.id} {...item} />)}
+        {(data ?? DATA).map((item) => (
+          <DeviceCard key={item.id} {...item} />
+        ))}
       </div>
     </div>
   );

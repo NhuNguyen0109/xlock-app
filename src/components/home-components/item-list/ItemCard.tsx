@@ -9,7 +9,7 @@ const ItemCard: React.FC<ItemType> = (props) => {
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
-  const selected = selectedItem?.id === props.id;
+  const selected = selectedItem.id === props.id;
 
   const handleSelectItem = () => {
     dispatch(itemActions.selectItem({ ...props }));
@@ -28,7 +28,7 @@ const ItemCard: React.FC<ItemType> = (props) => {
             src={`${
               props.logo_url
                 ? props.logo_url
-                : "src/assets/images/DefaultLogo.png"
+                : "/images/DefaultLogo.png"
             }`}
             alt="DefaultLogo"
             className=""
