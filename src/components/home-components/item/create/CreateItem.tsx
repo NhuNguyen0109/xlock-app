@@ -1,68 +1,77 @@
 import "../../../../assets/styles/";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { RootState } from "../../../../store/index.ts";
-import InputFieldEdit from "../../../input-field/InputFieldEdit.tsx";
-import AccountType, { ShareItemType } from "../../../../types/item.ts";
-import getDecryptedCreds, {
-  DecryptedCreds,
-} from "../../../../utils/decrypt-creds.ts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import InputFieldCreate from "../../../input-field/InputFieldCreate.tsx";
+import AccountType from "../../../../types/item.ts";
+import { useMutation } from "@tanstack/react-query";
 import { apiCall, ApiEndpoints } from "../../../../utils/index.ts";
-import UpdatedItemType from "../../../../types/update-item.ts";
+import CreateItemType from "../../../../types/create-item.ts";
 import requestEncrypt from "../../../../utils/browserCall/request.encrypt.key.ts";
-// import { queryClient } from "../../../../App.tsx";
 import StatusPopup from "../../../status-popup/StatusPopup.tsx";
 import useModal from "../../../../utils/useModal.ts";
+import { itemActions } from "../../../../store/item.slice.ts";
 
-interface EditingItem {
+const defaultAccount: AccountType = {
+  id: "",
+  name: "",
+  site: "",
+  description: "",
+  enc_credentials: "",
+  added_at: "",
+  updated_at: "",
+  logo_url: "",
+  type: "",
+};
+
+interface CreateItem {
   cancel(): void;
 }
-type FormDataKey = "name" | "credential" | "password" | "site";
 
-const EditItem: React.FC<EditingItem> = ({ cancel }) => {
+const CreateItem: React.FC<CreateItem> = ({ cancel }) => {
   const queryClient = useQueryClient();
-  const [decCreds, setDecCreds] = useState<DecryptedCreds>();
+  const dispatch = useDispatch();
+  const cachedItems = queryClient.getQueryData<AccountType[]>(["items"]) || [];
+  const firstItem = cachedItems.length > 0 ? cachedItems[0] : undefined;
+
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
-  const { isOpen, modalRef, closeModal, openModal } = useModal();
+  const {
+    isOpen: isOpenSuccess,
+    modalRef: modalRefSuccess,
+    closeModal: closeModalSuccess,
+    openModal: openModalSuccess,
+  } = useModal();
+  const {
+    isOpen: isOpenError,
+    modalRef: modalRefError,
+    closeModal: closeModalError,
+    openModal: openModalError,
+  } = useModal();
+  const [isCompleteForm, setIsCompleteForm] = useState<boolean>(true);
 
   const { mutate, isError } = useMutation({
-    mutationFn: apiCall<null, UpdatedItemType>,
-    onSuccess: () => {
+    mutationFn: apiCall<AccountType, CreateItemType>,
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
-      openModal();
+      openModalSuccess();
       setTimeout(() => {
-        closeModal();
+        dispatch(itemActions.selectItem(data.data));
+        closeModalSuccess();
         cancel();
       }, 700);
     },
   });
 
-  if (isError) console.log("Failed to update item.");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const decryptCreds = await getDecryptedCreds(
-          selectedItem.enc_credentials,
-          selectedItem.type
-        );
-        setDecCreds(decryptCreds);
-      } catch (error) {
-        console.error("Error fetching decrypted credentials:", error);
-      }
-    };
-
-    fetchData();
-  }, [selectedItem]);
+  if (isError) console.log("Failed to create item.");
 
   const [formData, setFormData] = useState({
-    name: selectedItem.name,
-    credential: decCreds?.credential || "",
-    password: decCreds?.password || "",
-    site: selectedItem.site,
+    name: "",
+    credential: "",
+    password: "",
+    site: "",
   });
 
   const handleChangeValue = (
@@ -75,52 +84,77 @@ const EditItem: React.FC<EditingItem> = ({ cancel }) => {
     }));
   };
 
-  const hasChanged = (key: FormDataKey) => {
-    if (key === "credential" || key === "password") {
-      // return false;
-      return decCreds?.[key] !== formData[key];
+  useEffect(() => {
+    if (!isCompleteForm) {
+      openModalError();
+      const timer = setTimeout(() => {
+        closeModalError();
+        setIsCompleteForm(true);
+      }, 2000);
+
+      return () => clearTimeout(timer);
     }
-    return selectedItem[key] !== formData[key];
-  };
+  }, [isCompleteForm]);
 
   const handleSave = async () => {
-    const updatedData: Partial<UpdatedItemType> = {};
+    const mixedData = hasMixedData(formData);
+    if (mixedData) setIsCompleteForm(false);
+    else {
+      if (Object.values(formData).every((value) => value.trim() === ""))
+        handleNothingChanged();
+      else {
+        let requestData: CreateItemType = {
+          name: formData.name,
+          enc_credentials: "",
+          site: formData.site,
+          description: "",
+          logo_url: "",
+        };
 
-    if (hasChanged("name")) {
-      updatedData.name = formData.name;
+        const { encrypted } = await requestEncrypt(
+          `${formData.credential}::${formData.password}`
+        );
+        requestData.enc_credentials = encrypted || "";
+
+        mutate({
+          endpoint: ApiEndpoints.CreateItem,
+          method: "POST",
+          requestData,
+        });
+      }
     }
+  };
 
-    if (hasChanged("site")) {
-      updatedData.site = formData.site;
-    }
-
-    if (hasChanged("credential") || hasChanged("password")) {
-      const { encrypted } = await requestEncrypt(
-        `${formData.credential}::${formData.password}`
-      );
-      updatedData.enc_credentials = encrypted;
-    }
-
-    if (Object.keys(updatedData).length > 0) {
-      mutate({
-        endpoint: `${ApiEndpoints.UpdateItem}${selectedItem.id}`,
-        method: "PATCH",
-        requestData: updatedData,
-      });
-    } else cancel();
+  const handleNothingChanged = () => {
+    dispatch(itemActions.selectItem(firstItem || defaultAccount));
+    cancel();
   };
 
   return (
     <>
-      {isOpen && (
+      {isOpenSuccess && (
         <div className="blur-bg">
           <div
             className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
-            ref={modalRef}
+            ref={modalRefSuccess}
           >
             <StatusPopup
               success={true}
-              body="Shared successfully"
+              body="Created successfully"
+              container={true}
+            />
+          </div>
+        </div>
+      )}
+      {isOpenError && (
+        <div className="blur-bg z-[2000]">
+          <div
+            className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
+            ref={modalRefError}
+          >
+            <StatusPopup
+              success={false}
+              body="All fields must be filled"
               container={true}
             />
           </div>
@@ -143,28 +177,17 @@ const EditItem: React.FC<EditingItem> = ({ cancel }) => {
             <input
               id="name"
               autoFocus
-              className="text-black text-2xl not-italic font-semibold leading-[normal] border-none rounded-[6px]
-                          focus:outline-[#0570EB] focus:bg-[#E6F1FD]"
+              className="text-black text-2xl not-italic font-semibold leading-[normal] rounded-[6px]
+                          focus:outline-[#0570EB] focus:bg-[#E6F1FD] border-solid border-[2px] border-[#D1D3D3]"
               value={formData.name}
               onChange={(event) => handleChangeValue?.(event)}
-              disabled={formData.name === "XLock"}
             />
-            <div className="flex gap-[2px]">
-              <p className="text-black text-sm not-italic font-normal leading-[normal]">
-                account {selectedItem?.order}
-              </p>
-              <p className="text-[#767C7C] text-sm not-italic font-normal leading-[normal]">
-                {selectedItem && isShareItemType(selectedItem)
-                  ? "| Item shared by " + selectedItem?.shared_by.email
-                  : null}
-              </p>
-            </div>
           </div>
         </div>
         <div className=" flex justify-center items-center">
           <button
             className="button-1-empty border-none px-[16px]"
-            onClick={cancel}
+            onClick={handleNothingChanged}
           >
             Cancel
           </button>
@@ -182,13 +205,13 @@ const EditItem: React.FC<EditingItem> = ({ cancel }) => {
             <p className="body-text-bold">Account</p>
           </div>
           <div className="flex flex-col gap-[4px] my-[4px]">
-            <InputFieldEdit
+            <InputFieldCreate
               type="credential"
               title="Credentials"
               value={formData.credential}
               handleChangeValue={handleChangeValue}
             />
-            <InputFieldEdit
+            <InputFieldCreate
               type="password"
               title="Password"
               value={formData.password}
@@ -201,7 +224,7 @@ const EditItem: React.FC<EditingItem> = ({ cancel }) => {
             <p className="body-text-bold">Website</p>
           </div>
           <div className="flex flex-col gap-[4px] my-[4px]">
-            <InputFieldEdit
+            <InputFieldCreate
               type="site"
               title=""
               value={formData.site}
@@ -214,8 +237,12 @@ const EditItem: React.FC<EditingItem> = ({ cancel }) => {
   );
 };
 
-function isShareItemType(item: AccountType): item is ShareItemType {
-  return (item as ShareItemType).shared_by !== undefined;
-}
+const hasMixedData = (data: { [key: string]: string }) => {
+  const values = Object.values(data);
+  const hasData = values.some((value) => value.trim() !== "");
+  const hasEmpty = values.some((value) => value.trim() === "");
 
-export default EditItem;
+  return hasData && hasEmpty;
+};
+
+export default CreateItem;

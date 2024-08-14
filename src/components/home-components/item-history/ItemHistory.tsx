@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useModal from "../../../utils/useModal";
 import "../../../assets/styles";
 import ItemAccessHistory from "./ItemAccessHistory";
 import ItemShareHistory from "./ItemShareHistory";
 import FilterPopup from "../../filter/FilterPopup";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 const ItemHistory = () => {
   const {
@@ -17,11 +19,22 @@ const ItemHistory = () => {
   const [isAccessTab, setIsAccessTab] = useState(true);
   const [thisDevice, setThisDevice] = useState(false);
   const [thisBrowser, setThisBrowser] = useState(true);
+  const selectedItem = useSelector(
+    (state: RootState) => state.item.selectedItem
+  );
+
+  useEffect(() => {
+    if (selectedItem.id === "") {
+      setIsOpen(false);
+    } else setIsOpen(true);
+  }, [selectedItem]);
 
   const CloseHistory = () => {
-    setIsAccessTab(true);
-    setIsOpen(!isOpen);
-    closeModal();
+    if (selectedItem.id !== "") {
+      setIsAccessTab(true);
+      setIsOpen(!isOpen);
+      closeModal();
+    }
   };
 
   let content =

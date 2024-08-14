@@ -9,6 +9,18 @@ import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
 import ItemCard from "./ItemCard";
 
+const defaultAccount: AccountType = {
+  id: "",
+  name: "",
+  site: "",
+  description: "",
+  enc_credentials: "",
+  added_at: "",
+  updated_at: "",
+  logo_url: "",
+  type: "",
+};
+
 let DATA: AccountType[] = [
   {
     id: "1",
@@ -82,6 +94,10 @@ const ItemList = () => {
     setSearchQuery("");
   }, [selectedItem]);
 
+  const handleCreateItem = () => {
+    dispatch(itemActions.selectItem(defaultAccount));
+  };
+
   return (
     <div className="item-list-section flex flex-col flex-grow">
       <div className="header w-full h-[48px] p-[12px] bg-[#E6F1FD] flex items-center justify-between">
@@ -94,7 +110,10 @@ const ItemList = () => {
             className="h-[24px] w-full rounded-[12px] px-[12px] inactive-title focus:outline-[#0570EB] body-text"
           />
         </div>
-        <div className="w-[24px] h-[24px] flex justify-center items-center">
+        <div
+          className="w-[24px] h-[24px] flex justify-center items-center"
+          onClick={handleCreateItem}
+        >
           <img src="/images/New.png" alt="More" className="" />
         </div>
       </div>
