@@ -7,11 +7,11 @@ import AccountType, { ShareItemType } from "../../../../types/item.ts";
 import getDecryptedCreds, {
   DecryptedCreds,
 } from "../../../../utils/decrypt-creds.ts";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiCall, ApiEndpoints } from "../../../../utils/index.ts";
 import UpdatedItemType from "../../../../types/update-item.ts";
 import requestEncrypt from "../../../../utils/browserCall/request.encrypt.key.ts";
-import { queryClient } from "../../../../App.tsx";
+// import { queryClient } from "../../../../App.tsx";
 import StatusPopup from "../../../status-popup/StatusPopup.tsx";
 import useModal from "../../../../utils/useModal.ts";
 
@@ -21,6 +21,7 @@ interface EditingItem {
 type FormDataKey = "name" | "credential" | "password" | "site";
 
 const EditItem: React.FC<EditingItem> = ({ cancel }) => {
+  const queryClient = useQueryClient();
   const [decCreds, setDecCreds] = useState<DecryptedCreds>();
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
@@ -146,6 +147,7 @@ const EditItem: React.FC<EditingItem> = ({ cancel }) => {
                           focus:outline-[#0570EB] focus:bg-[#E6F1FD]"
               value={formData.name}
               onChange={(event) => handleChangeValue?.(event)}
+              disabled={formData.name === "XLock"}
             />
             <div className="flex gap-[2px]">
               <p className="text-black text-sm not-italic font-normal leading-[normal]">

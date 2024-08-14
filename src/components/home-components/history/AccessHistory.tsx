@@ -50,7 +50,7 @@ const AccessHistory = () => {
           <img src="/images/More.png" alt="More" className="" />
         </div>
       </div>
-      <div className="access-history-list w-full h-full bg-white flex flex-col gap-[6px] p-[12px] overflow-y-auto relative z-[1]">
+      <div className="access-history-list w-full h-full bg-white flex flex-col gap-[12px] p-[12px] overflow-y-auto relative z-[1]">
         {isOpen && (
           <div
             className="w-fit h-fit absolute top-0 right-0 z-[3]"
