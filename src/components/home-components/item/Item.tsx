@@ -11,6 +11,7 @@ import getDecryptedCreds, {
   DecryptedCreds,
 } from "../../../utils/decrypt-creds.ts";
 import EditItem from "./edit/EditItem.tsx";
+import DeletePopup from "./delete/DeletePopup.tsx";
 
 const Item = () => {
   const [isReveal, setIsReveal] = useState(false);
@@ -30,7 +31,7 @@ const Item = () => {
         );
         // const decryptCreds = {
         //   credential: selectedItem.enc_credentials,
-        //   password: "hihih",
+        //   password: "hihi",
         //   raw_creds: selectedItem.enc_credentials,
         // };
         setDecCreds(decryptCreds);
@@ -50,12 +51,12 @@ const Item = () => {
     openModal: openModalShare,
   } = useModal();
 
-  // const {
-  //   modalRef: modalRefDelete,
-  //   isOpen: isOpenDelete,
-  //   closeModal: closeModalDelete,
-  //   openModal: openModalDelete,
-  // } = useModal();
+  const {
+    modalRef: modalRefDelete,
+    isOpen: isOpenDelete,
+    closeModal: closeModalDelete,
+    openModal: openModalDelete,
+  } = useModal();
 
   const handleReveal = () => {
     setIsReveal(!isReveal);
@@ -65,7 +66,7 @@ const Item = () => {
     if (option === "edit") {
       setIsEditting(true);
     }
-    // if (option === "delete") openModalDelete();
+    if (option === "delete") openModalDelete();
     if (option === "share") openModalShare();
     closeModal();
   };
@@ -76,18 +77,28 @@ const Item = () => {
 
   return (
     <div className="item-section flex flex-col flex-grow items-center">
-      {isOpenShare && (
-        <div className="blur-bg">
-          <div
-            className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
-            ref={modalRefShare}
-          >
-            <SharePopup closeModal={closeModalShare} />
-          </div>
-        </div>
-      )}
       {!isEditing && (
         <>
+          {isOpenShare && (
+            <div className="blur-bg">
+              <div
+                className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
+                ref={modalRefShare}
+              >
+                <SharePopup closeModal={closeModalShare} />
+              </div>
+            </div>
+          )}
+          {isOpenDelete && (
+            <div className="blur-bg">
+              <div
+                className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
+                ref={modalRefDelete}
+              >
+                <DeletePopup closeModal={closeModalDelete} />
+              </div>
+            </div>
+          )}
           <div className="header w-full h-[90px] bg-white flex items-center justify-between p-[20px] card-border">
             <div className="h-full flex items-center gap-[20px] ">
               <div className="w-[48px] h-[48px] flex justify-center">
