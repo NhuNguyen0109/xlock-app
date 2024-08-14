@@ -7,7 +7,6 @@ import { itemActions } from "../../../store/item.slice.ts";
 import { apiCall, ApiEndpoints } from "../../../utils/index.ts";
 import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
-
 let DATA: AccountType[] = [
   {
     id: "1",

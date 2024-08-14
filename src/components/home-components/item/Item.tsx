@@ -31,7 +31,7 @@ const Item = () => {
         );
         // const decryptCreds = {
         //   credential: selectedItem.enc_credentials,
-        //   password: "hihih",
+        //   password: "hihi",
         //   raw_creds: selectedItem.enc_credentials,
         // };
         setDecCreds(decryptCreds);
@@ -66,7 +66,7 @@ const Item = () => {
     if (option === "edit") {
       setIsEditting(true);
     }
-    // if (option === "delete") openModalDelete();
+    if (option === "delete") openModalDelete();
     if (option === "share") openModalShare();
     closeModal();
   };
@@ -95,10 +95,7 @@ const Item = () => {
                 className="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
                 ref={modalRefDelete}
               >
-                <DeletePopup
-                  closeModal={closeModalDelete}
-                  item={selectedItem}
-                />
+                <DeletePopup closeModal={closeModalDelete} />
               </div>
             </div>
           )}
