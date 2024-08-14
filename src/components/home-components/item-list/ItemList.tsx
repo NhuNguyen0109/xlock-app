@@ -48,6 +48,7 @@ const ItemList = () => {
         endpoint: ApiEndpoints.GetListItems,
         method: "GET",
       });
+      console.log("success fetching items");
       return response.data;
     },
   });
