@@ -11,10 +11,12 @@ import getDecryptedCreds, {
   DecryptedCreds,
 } from "../../../utils/decrypt-creds.ts";
 import EditItem from "./edit/EditItem.tsx";
+import CreateItem from "./create/CreateItem.tsx";
 
 const Item = () => {
   const [isReveal, setIsReveal] = useState(false);
   const [isEditing, setIsEditting] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [decCreds, setDecCreds] = useState<DecryptedCreds>();
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
@@ -22,24 +24,29 @@ const Item = () => {
 
   useEffect(() => {
     setIsEditting(false);
-    const fetchData = async () => {
-      try {
-        const decryptCreds = await getDecryptedCreds(
-          selectedItem.enc_credentials,
-          selectedItem.type
-        );
-        // const decryptCreds = {
-        //   credential: selectedItem.enc_credentials,
-        //   password: "hihih",
-        //   raw_creds: selectedItem.enc_credentials,
-        // };
-        setDecCreds(decryptCreds);
-      } catch (error) {
-        console.error("Error fetching decrypted credentials:", error);
-      }
-    };
+    if (selectedItem.id === "") {
+      setIsCreating(true);
+    } else {
+      setIsCreating(false);
+      const fetchData = async () => {
+        try {
+          const decryptCreds = await getDecryptedCreds(
+            selectedItem.enc_credentials,
+            selectedItem.type
+          );
+          // const decryptCreds = {
+          //   credential: selectedItem.enc_credentials,
+          //   password: "hihi",
+          //   raw_creds: selectedItem.enc_credentials,
+          // };
+          setDecCreds(decryptCreds);
+        } catch (error) {
+          console.error("Error fetching decrypted credentials:", error);
+        }
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, [selectedItem]);
 
   const { modalRef, buttonRef, isOpen, closeModal, openModal } = useModal();
@@ -67,6 +74,9 @@ const Item = () => {
     }
     // if (option === "delete") openModalDelete();
     if (option === "share") openModalShare();
+    if (option === "create") {
+      setIsCreating(true);
+    }
     closeModal();
   };
 
@@ -86,7 +96,7 @@ const Item = () => {
           </div>
         </div>
       )}
-      {!isEditing && (
+      {!isEditing && !isCreating && (
         <>
           <div className="header w-full h-[90px] bg-white flex items-center justify-between p-[20px] card-border">
             <div className="h-full flex items-center gap-[20px] ">
@@ -189,6 +199,7 @@ const Item = () => {
         </>
       )}
       {isEditing && <EditItem cancel={() => setIsEditting(false)} />}
+      {isCreating && <CreateItem cancel={() => setIsCreating(false)} />}
     </div>
   );
 };

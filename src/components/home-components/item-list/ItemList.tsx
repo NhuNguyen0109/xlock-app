@@ -8,6 +8,18 @@ import { apiCall, ApiEndpoints } from "../../../utils/index.ts";
 import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
 
+const defaultAccount: AccountType = {
+  id: "",
+  name: "",
+  site: "",
+  description: "",
+  enc_credentials: "",
+  added_at: "",
+  updated_at: "",
+  logo_url: "",
+  type: "",
+};
+
 let DATA: AccountType[] = [
   {
     id: "1",
@@ -66,11 +78,18 @@ const ItemList = () => {
     dispatch(itemActions.selectItem(itemsToRender[0]));
   }, [dispatch]);
 
+  const handleCreateItem = () => {
+    dispatch(itemActions.selectItem(defaultAccount));
+  };
+
   return (
     <div className="item-list-section flex flex-col flex-grow">
       <div className="header w-full h-[48px] p-[12px] bg-[#E6F1FD] flex items-center justify-between">
         <SearchBar data={itemsToRender} />
-        <div className="w-[24px] h-[24px] flex justify-center items-center">
+        <div
+          className="w-[24px] h-[24px] flex justify-center items-center"
+          onClick={handleCreateItem}
+        >
           <img src="/images/New.png" alt="More" className="" />
         </div>
       </div>
