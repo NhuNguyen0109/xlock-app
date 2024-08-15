@@ -23,15 +23,20 @@ const LogIn = () => {
     }));
   };
   const handleLogin = async () => {
-    const { password: hashedPassword } = await requestHashPassword(
-      formData.password
-    );
     try {
-      await submitLogin({
+      const { password: hashedPassword } = await requestHashPassword(
+        formData.password
+      );
+      const success = await submitLogin({
         email: formData.email,
         password: hashedPassword,
       });
-      handleNavigate();
+
+      if (success) {
+        handleNavigate();
+      } else {
+        console.error("Login process failed");
+      }
     } catch (error) {
       console.error("Login failed:", error);
     }

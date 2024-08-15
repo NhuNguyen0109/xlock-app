@@ -9,22 +9,25 @@ import LoginType, { ResponseLoginType } from "../types/login";
 export const useSubmitLogin = () => {
   const dispatch = useDispatch();
 
-  return ({ email, password }: LoginType) => {
-    apiCall<ResponseLoginType, LoginType>({
-      method: "POST",
-      endpoint: ApiEndpoints.Login,
-      requestData: { email, password },
-    })
-      .then((response) => {
-        const access_token = response.data.access_token;
-        storeAccessToken(access_token);
-        dispatch(loginActions.handleSuccessLogin());
-        sendUserExt({ password, access_token });
-      })
-      .catch((error) => {
-        console.error("Login failed:", error);
-        dispatch(loginActions.handleFailureLogin());
+  return async ({ email, password }: LoginType): Promise<boolean> => {
+    try {
+      const response = await apiCall<ResponseLoginType, LoginType>({
+        method: "POST",
+        endpoint: ApiEndpoints.Login,
+        requestData: { email, password },
       });
+
+      const access_token = response.data.access_token;
+      storeAccessToken(access_token);
+      dispatch(loginActions.handleSuccessLogin());
+
+      const userExtSuccess = await sendUserExt({ password, access_token });
+      return userExtSuccess;
+    } catch (error) {
+      console.error("Login failed:", error);
+      dispatch(loginActions.handleFailureLogin());
+      return false;
+    }
   };
 };
 
