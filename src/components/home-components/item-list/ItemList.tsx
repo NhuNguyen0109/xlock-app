@@ -9,46 +9,22 @@ import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
 import ItemCard from "./ItemCard";
 
-const defaultAccount: AccountType = {
-  id: "",
+const defaultItem = {
   name: "",
   site: "",
   description: "",
   enc_credentials: "",
+  logo_url: "",
+  id: "",
   added_at: "",
   updated_at: "",
-  logo_url: "",
   type: "",
 };
-
-let DATA: AccountType[] = [
-  {
-    id: "1",
-    name: "XLock",
-    site: "https://example.org",
-    description: "Conveniently scale focused paradigms.",
-    enc_credentials: "anngo",
-    added_at: "2023-07-15",
-    updated_at: "2023-07-15",
-    logo_url: "",
-    type: "personal_item",
-  },
-  {
-    id: "2",
-    name: "Netflix",
-    site: "https://example.org",
-    description: "Conveniently scale focused paradigms.",
-    enc_credentials: "anngo",
-    added_at: "2023-07-15",
-    updated_at: "2023-07-15",
-    logo_url: "",
-    type: "personal_item",
-  },
-];
 
 const ItemList = () => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [itemsToRender, setItemsToRender] = useState<AccountType[]>([]);
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
@@ -60,22 +36,26 @@ const ItemList = () => {
         endpoint: ApiEndpoints.GetListItems,
         method: "GET",
       });
-      console.log("success fetching items");
       return response.data;
     },
   });
 
-  let itemsToRender = addOrderToAccounts(DATA);
+  useEffect(() => {
+    if (isSuccess && data) {
+      setItemsToRender(addOrderToAccounts(data));
+    }
+  }, [isSuccess, data]);
 
-  if (isSuccess) {
-    itemsToRender = addOrderToAccounts(data);
-  }
+  useEffect(() => {
+    if (itemsToRender.length > 0) {
+      dispatch(itemActions.selectItem(itemsToRender[0]));
+    }
+  }, [dispatch, itemsToRender]);
 
   if (isError) {
     console.log("Error in fetching items");
   }
 
-  // Filter items based on the search query
   const filteredItems = useMemo(() => {
     return searchQuery.trim()
       ? itemsToRender.filter(
@@ -87,15 +67,12 @@ const ItemList = () => {
   }, [searchQuery, itemsToRender]);
 
   useEffect(() => {
-    dispatch(itemActions.selectItem(itemsToRender[0]));
-  }, [dispatch]);
-
-  useEffect(() => {
     setSearchQuery("");
   }, [selectedItem]);
 
   const handleCreateItem = () => {
-    dispatch(itemActions.selectItem(defaultAccount));
+    dispatch(itemActions.selectItem(defaultItem));
+    dispatch(itemActions.setISCreatingTrue());
   };
 
   return (

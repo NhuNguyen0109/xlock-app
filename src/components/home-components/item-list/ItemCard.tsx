@@ -26,9 +26,7 @@ const ItemCard: React.FC<ItemType> = (props) => {
         <div className="w-[32px] h-[32px] flex justify-center">
           <img
             src={`${
-              props.logo_url
-                ? props.logo_url
-                : "/images/DefaultLogo.png"
+              props.logo_url ? props.logo_url : "/images/DefaultLogo.png"
             }`}
             alt="DefaultLogo"
             className=""

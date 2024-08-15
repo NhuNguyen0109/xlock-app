@@ -139,7 +139,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
       {!isSuccess && !isError && !errorCallingExt && (
         <>
           <div className="header h-[48px] w-full bg-[#E6F1FD] flex items-center px-[20px] justify-between">
-            <p className="title">Your Devices and Browsers</p>
+            <p className="title">Share item</p>
             <div
               className="w-[24px] h-[24px] flex justify-center items-center"
               onClick={closeModal}
@@ -152,9 +152,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
               <div className="w-[32px] h-[32px] flex justify-center">
                 <img
                   src={`${
-                    item.logo_url
-                      ? item.logo_url
-                      : "/images/DefaultLogo.png"
+                    item.logo_url ? item.logo_url : "/images/DefaultLogo.png"
                   }`}
                   alt="DefaultLogo"
                   className=""
@@ -194,10 +192,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
                         className="w-[14px] h-[14px] flex justify-center items-center "
                         onClick={() => handleRemoveTag(index)}
                       >
-                        <img
-                          src="/images/CloseBlue.png"
-                          alt="Close"
-                        />
+                        <img src="/images/CloseBlue.png" alt="Close" />
                       </div>
                     </span>
                   ))}

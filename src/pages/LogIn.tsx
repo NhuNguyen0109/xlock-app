@@ -11,7 +11,7 @@ const LogIn = () => {
   const submitLogin = useSubmitLogin();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
+    identity: "",
     password: "",
   });
 
@@ -27,8 +27,12 @@ const LogIn = () => {
       const { password: hashedPassword } = await requestHashPassword(
         formData.password
       );
+      console.log({
+        identity: formData.identity,
+        password: hashedPassword,
+      });
       const success = await submitLogin({
-        email: formData.email,
+        identity: formData.identity,
         password: hashedPassword,
       });
 
@@ -70,8 +74,8 @@ const LogIn = () => {
             >
               <InputFieldSubmit
                 title="Email/Username"
-                value={formData.email}
-                type="email"
+                value={formData.identity}
+                type="identity"
                 handleChangeValue={handleChangeValue}
               />
               <InputFieldSubmit

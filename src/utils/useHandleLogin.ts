@@ -9,15 +9,16 @@ import LoginType, { ResponseLoginType } from "../types/login";
 export const useSubmitLogin = () => {
   const dispatch = useDispatch();
 
-  return async ({ email, password }: LoginType): Promise<boolean> => {
+  return async ({ identity, password }: LoginType): Promise<boolean> => {
     try {
       const response = await apiCall<ResponseLoginType, LoginType>({
         method: "POST",
         endpoint: ApiEndpoints.Login,
-        requestData: { email, password },
+        requestData: { identity, password },
       });
 
       const access_token = response.data.access_token;
+      console.log("new token", access_token);
       storeAccessToken(access_token);
       dispatch(loginActions.handleSuccessLogin());
 

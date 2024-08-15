@@ -9,7 +9,6 @@ import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import ProtectedRoute from "./components/main-components/ProtectedRoute.tsx";
 import checkDeviceId from "./utils/check-deviceid.ts";
-import { getDeviceId } from "./utils/device-id.ts";
 
 const router = createBrowserRouter([
   {

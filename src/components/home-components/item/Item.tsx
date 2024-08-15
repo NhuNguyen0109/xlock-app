@@ -1,6 +1,7 @@
 import "../../../assets/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useLayoutEffect, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import useModal from "../../../utils/useModal.ts";
 import { RootState } from "../../../store/index.ts";
 import InputFieldDisabled from "../../input-field/InputFieldDisabled.tsx";
@@ -13,22 +14,37 @@ import getDecryptedCreds, {
 import EditItem from "./edit/EditItem.tsx";
 import DeletePopup from "./delete/DeletePopup.tsx";
 import CreateItem from "./create/CreateItem.tsx";
+import EmptyItem from "./EmptyItem.tsx";
+import { itemActions } from "../../../store/item.slice.ts";
 
 const Item = () => {
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
   const [isReveal, setIsReveal] = useState(false);
   const [isEditing, setIsEditting] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
+  // const [isCreating, setIsCreating] = useState(false);
+  const [emptyItem, setEmptyItem] = useState(false);
   const [decCreds, setDecCreds] = useState<DecryptedCreds>();
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
 
+  const isCreating = useSelector((state: RootState) => state.item.isCreating);
+
   useEffect(() => {
+    setTimeout(() => {
+      const cachedItems =
+        queryClient.getQueryData<AccountType[]>(["items"]) || [];
+      setEmptyItem(cachedItems.length === 0);
+    }, 100);
+
+    //reset
     setIsEditting(false);
-    if (selectedItem.id === "") {
-      setIsCreating(true);
-    } else {
-      setIsCreating(false);
+    closeModalDelete();
+    closeModalShare();
+
+    if (!isCreating) {
       const fetchData = async () => {
         try {
           const decryptCreds = await getDecryptedCreds(
@@ -48,7 +64,7 @@ const Item = () => {
 
       fetchData();
     }
-  }, [selectedItem]);
+  }, [selectedItem, isCreating]);
 
   const { modalRef, buttonRef, isOpen, closeModal, openModal } = useModal();
   const {
@@ -76,7 +92,7 @@ const Item = () => {
     if (option === "delete") openModalDelete();
     if (option === "share") openModalShare();
     if (option === "create") {
-      setIsCreating(true);
+      dispatch(itemActions.setISCreatingTrue());
     }
     closeModal();
   };
@@ -87,7 +103,7 @@ const Item = () => {
 
   return (
     <div className="item-section flex flex-col flex-grow items-center">
-      {!isEditing && !isCreating && (
+      {!emptyItem && !isEditing && !isCreating && (
         <>
           {isOpenShare && (
             <div className="blur-bg">
@@ -127,7 +143,7 @@ const Item = () => {
                 </p>
                 <div className="flex gap-[2px]">
                   <p className="text-black text-sm not-italic font-normal leading-[normal]">
-                    account {selectedItem.order}
+                    account {selectedItem.order ?? "1"}
                   </p>
                   <p className="text-[#767C7C] text-sm not-italic font-normal leading-[normal]">
                     {selectedItem && isShareItemType(selectedItem)
@@ -209,8 +225,13 @@ const Item = () => {
           </div>
         </>
       )}
-      {isEditing && <EditItem cancel={() => setIsEditting(false)} />}
-      {isCreating && <CreateItem cancel={() => setIsCreating(false)} />}
+      {!emptyItem && isEditing && (
+        <EditItem cancel={() => setIsEditting(false)} />
+      )}
+      {isCreating && (
+        <CreateItem cancel={() => dispatch(itemActions.setISCreatingFalse())} />
+      )}
+      {emptyItem && !isEditing && !isCreating && <EmptyItem />}
     </div>
   );
 };

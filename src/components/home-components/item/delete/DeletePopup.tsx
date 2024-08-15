@@ -1,4 +1,3 @@
-import AccountType from "../../../../types/item";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
 import { apiCall, ApiEndpoints } from "../../../../utils";
@@ -6,7 +5,18 @@ import { useLayoutEffect } from "react";
 import StatusPopup from "../../../status-popup/StatusPopup";
 import { RootState } from "../../../../store";
 import { itemActions } from "../../../../store/item.slice";
-// import { queryClient } from "../../../../App";
+
+const defaultItem = {
+  name: "",
+  site: "",
+  description: "",
+  enc_credentials: "",
+  logo_url: "",
+  id: "",
+  added_at: "",
+  updated_at: "",
+  type: "",
+};
 
 interface DeletePopup {
   closeModal(): void;
@@ -16,31 +26,15 @@ const DeletePopup: React.FC<DeletePopup> = ({ closeModal }) => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const cachedItems = queryClient.getQueryData<AccountType[]>(["items"]) || [];
-  const firstItem = cachedItems.length > 0 ? cachedItems[0] : undefined;
-  const secondItem = cachedItems.length > 1 ? cachedItems[1] : undefined;
-
   const item = useSelector((state: RootState) => state.item.selectedItem);
 
   const deleteXLock = item && item.name === "XLock";
 
-  console.log("xlock", deleteXLock);
-
   const { mutate, isError, isSuccess } = useMutation({
     mutationFn: apiCall<null>,
     onSuccess: () => {
+      dispatch(itemActions.selectItem(defaultItem));
       queryClient.invalidateQueries({ queryKey: ["items"] });
-
-      setTimeout(() => {
-        if (firstItem) {
-          // Ensure firstItem is defined before using it
-          if (item && item.id === firstItem.id) {
-            dispatch(itemActions.selectItem(secondItem || firstItem)); // Fallback to firstItem if secondItem is undefined
-          } else {
-            dispatch(itemActions.selectItem(firstItem));
-          }
-        }
-      }, 700);
     },
   });
   const handleDelete = () => {

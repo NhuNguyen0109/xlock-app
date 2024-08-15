@@ -3,6 +3,7 @@ import AccountType from "../types/item";
 
 export interface ItemState {
   selectedItem: AccountType;
+  isCreating: boolean;
 }
 
 // Define the initial state
@@ -18,6 +19,7 @@ const initialState: ItemState = {
     updated_at: "",
     type: "",
   },
+  isCreating: false,
 };
 
 const itemSlice = createSlice({
@@ -26,6 +28,14 @@ const itemSlice = createSlice({
   reducers: {
     selectItem: (state, action: PayloadAction<AccountType>) => {
       state.selectedItem = action.payload;
+    },
+
+    setISCreatingTrue: (state) => {
+      state.isCreating = true;
+    },
+
+    setISCreatingFalse: (state) => {
+      state.isCreating = false;
     },
   },
 });

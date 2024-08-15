@@ -15,9 +15,10 @@ import {
   Congratulations,
 } from "../components/signup-components";
 import { RootState } from "../store";
-import { apiCall, useSubmitLogin, ApiEndpoints } from "../utils";
+import { apiCall, ApiEndpoints, useSubmitLogin } from "../utils";
 import { useNavigate } from "react-router-dom";
 import RegisterInfo, { ResponseRegisterInfo } from "../types/register-info";
+import { getAccessToken } from "../utils/access-token";
 
 const SignUp = () => {
   const [component, setComponent] = useState(0);
@@ -48,10 +49,16 @@ const SignUp = () => {
   const handleLogin = async () => {
     handleNextStep();
     try {
-      await submitLogin({
-        email: registerInfo.email,
+      const success = await submitLogin({
+        identity: registerInfo.email,
         password: registerInfo.password,
       });
+      if (success) {
+        console.log("successlogin");
+        console.log("token in storage", getAccessToken());
+      } else {
+        console.error("Login process failed");
+      }
     } catch (error) {
       console.error("Login failed:", error);
     }

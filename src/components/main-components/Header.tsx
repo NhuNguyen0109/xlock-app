@@ -47,7 +47,9 @@ const Header = () => {
           />
         </div>
         <div className="button-section w-fit h-full flex justify-between items-center gap-[16px]">
-          {!loginState && (
+          {(!loginState ||
+            location.pathname === "/signup" ||
+            location.pathname === "/login") && (
             <>
               <button
                 className="w-[90px] h-[40px] button-1-empty"
