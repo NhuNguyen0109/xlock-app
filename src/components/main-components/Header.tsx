@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/index.ts";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { loginActions } from "../../store/login.slice.ts";
 import useModal from "../../utils/useModal.ts";
 
@@ -10,6 +10,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const loginState = useSelector((state: RootState) => state.login.login);
   const navigate = useNavigate();
+  const location = useLocation();
   const { isOpen, closeModal, openModal, modalRef, buttonRef } = useModal();
 
   const handleNavLink = (path: string) => {
@@ -24,6 +25,12 @@ const Header = () => {
   const handleLogoTrigger = () => {
     if (!loginState) navigate("/");
   };
+
+  // Check the current path and call handleLogout if the path is "/"
+  if (location.pathname === "/") {
+    handleLogout();
+  }
+
   return (
     <>
       <div className="w-full bg-yellow h-[100px] px-[40px] py-[20px] flex justify-between items-center bg-white relative">
@@ -54,7 +61,7 @@ const Header = () => {
               </button>
             </>
           )}
-          {loginState && (
+          {loginState && location.pathname === "/home" && (
             <>
               <div
                 className="size-[40px]"

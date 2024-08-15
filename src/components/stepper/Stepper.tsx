@@ -1,4 +1,4 @@
-import "../../assets/styles/border.css";
+import "../../assets/styles";
 
 const Stepper: React.FC<{ step: number }> = ({ step }) => {
   return (
@@ -16,9 +16,9 @@ const Stepper: React.FC<{ step: number }> = ({ step }) => {
         </div>
         <div className="w-[32px] h-full flex items-center">
           {step >= 1 ? (
-            <img src="/images/checkpoint.png" alt="checkpoint" />
+            <img src="src/assets/images/checkpoint.png" alt="checkpoint" />
           ) : (
-            <img src="/images/checkpoint2.png" alt="checkpoint2" />
+            <img src="src/assets/images/checkpoint2.png" alt="checkpoint2" />
           )}
         </div>
       </div>
@@ -35,9 +35,9 @@ const Stepper: React.FC<{ step: number }> = ({ step }) => {
         </div>
         <div className="w-[32px] h-full flex items-center">
           {step >= 5 ? (
-            <img src="/images/checkpoint.png" alt="checkpoint" />
+            <img src="src/assets/images/checkpoint.png" alt="checkpoint" />
           ) : (
-            <img src="/images/checkpoint2.png" alt="checkpoint2" />
+            <img src="src/assets/images/checkpoint2.png" alt="checkpoint2" />
           )}
         </div>
       </div>
@@ -54,9 +54,9 @@ const Stepper: React.FC<{ step: number }> = ({ step }) => {
         </div>
         <div className="w-[32px] h-full flex items-center">
           {step >= 6 ? (
-            <img src="/images/checkpoint.png" alt="checkpoint" />
+            <img src="src/assets/images/checkpoint.png" alt="checkpoint" />
           ) : (
-            <img src="/images/checkpoint2.png" alt="checkpoint2" />
+            <img src="src/assets/images/checkpoint2.png" alt="checkpoint2" />
           )}
         </div>
       </div>

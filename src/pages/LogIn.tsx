@@ -86,14 +86,19 @@ const LogIn = () => {
               <p className="body-text text-xs">Or</p>
               <button className="button-3 font-[500] box-shadow w-[352px] h-[40px] flex items-center justify-center gap-[16px]">
                 <div className="w-[20px] h-[20px] flex justify-center">
-                  <img
-                    src="/images/Google.png"
-                    alt="Device"
-                    className=""
-                  />
+                  <img src="/images/Google.png" alt="Device" className="" />
                 </div>
                 Log in with Google
               </button>
+              <div className="flex w-full justify-center gap-[4px]">
+                <p className="body-text text-xs">Do not have an account?</p>
+                <a
+                  className="body-text text-xs text text-[#0570EB]"
+                  href="/signup"
+                >
+                  Create an XLock account
+                </a>
+              </div>
             </div>
             <div></div>
           </div>

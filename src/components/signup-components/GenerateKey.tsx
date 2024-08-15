@@ -56,9 +56,8 @@ const GenerateKey: React.FC<ButtonType> = ({ handleNextStep }) => {
         <p className="h1">Generate your key</p>
       </div>
       <p className="body-text font-[500] text-center">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis
+        Our app will generate a unique encryption key pair to enhance your
+        account security and protect your sensitive data.
       </p>
       <div className="flex flex-col justify-center items-center gap-[8px]">
         <button
