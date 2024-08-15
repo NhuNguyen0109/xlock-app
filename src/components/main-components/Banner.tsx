@@ -5,19 +5,19 @@ import { useNavigate } from "react-router-dom";
 const Banner = () => {
   const navigate = useNavigate();
   return (
-    <div className="w-full h-[528px] relative">
+    <div className="w-full flex relative self-stretch">
       <div
-        className="w-full h-full"
+        className="size-full"
         style={{
           backgroundImage: `url(${backgroundImg})`,
           backgroundPosition: "center",
-          backgroundSize: "cover",
-          height: "full",
-          width: "full",
+          backgroundSize: "100% 100%",
+          // height: "full",
+          // width: "full",
         }}
       >
         <button
-          className="button-1-fill w-[200px] h-[52px] rounded-[8px] absolute text-[20px] bottom-[25%] left-[5%]"
+          className="button-1-fill w-[230px] h-[58px] rounded-[8px] absolute text-[24px] bottom-[25%] left-[5%]"
           onClick={() => navigate("/signup")}
         >
           Try XLock now

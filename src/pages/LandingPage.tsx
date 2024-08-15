@@ -5,10 +5,12 @@ import "../assets/styles";
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <div className="flex flex-grow w-full h-full items-center">
-        <Banner />
+    <div className="flex flex-col">
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <div className="flex flex-grow w-full items-center">
+          <Banner />
+        </div>
       </div>
       <Footer />
     </div>
