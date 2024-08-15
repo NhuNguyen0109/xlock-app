@@ -1,7 +1,7 @@
 import "../../../assets/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useLayoutEffect, useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import useModal from "../../../utils/useModal.ts";
 import { RootState } from "../../../store/index.ts";
 import InputFieldDisabled from "../../input-field/InputFieldDisabled.tsx";
@@ -26,13 +26,31 @@ const Item = () => {
   // const [isCreating, setIsCreating] = useState(false);
   const [emptyItem, setEmptyItem] = useState(false);
   const [decCreds, setDecCreds] = useState<DecryptedCreds>();
+  const isCreating = useSelector((state: RootState) => state.item.isCreating);
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
 
-  const isCreating = useSelector((state: RootState) => state.item.isCreating);
+  const { data, isSuccess, isError } = useQuery({
+    queryKey: ["item", selectedItem.id],
+    queryFn: async () => {
+      const decryptCreds = await getDecryptedCreds(
+        selectedItem.enc_credentials,
+        selectedItem.type
+      );
+      return decryptCreds;
+    },
+    enabled: !!selectedItem.id && !isCreating,
+    refetchInterval: 10000,
+  });
 
   useEffect(() => {
+    if (isSuccess) setDecCreds(data);
+  }, [data, isSuccess]);
+
+  if (isError) console.log("Failed to decrypt");
+
+  useLayoutEffect(() => {
     setTimeout(() => {
       const cachedItems =
         queryClient.getQueryData<AccountType[]>(["items"]) || [];
@@ -44,26 +62,26 @@ const Item = () => {
     closeModalDelete();
     closeModalShare();
 
-    if (!isCreating) {
-      const fetchData = async () => {
-        try {
-          const decryptCreds = await getDecryptedCreds(
-            selectedItem.enc_credentials,
-            selectedItem.type
-          );
-          // const decryptCreds = {
-          //   credential: selectedItem.enc_credentials,
-          //   password: "hihi",
-          //   raw_creds: selectedItem.enc_credentials,
-          // };
-          setDecCreds(decryptCreds);
-        } catch (error) {
-          console.error("Error fetching decrypted credentials:", error);
-        }
-      };
+    // if (!isCreating) {
+    //   const fetchData = async () => {
+    //     try {
+    //       const decryptCreds = await getDecryptedCreds(
+    //         selectedItem.enc_credentials,
+    //         selectedItem.type
+    //       );
+    //       // const decryptCreds = {
+    //       //   credential: selectedItem.enc_credentials,
+    //       //   password: "hihi",
+    //       //   raw_creds: selectedItem.enc_credentials,
+    //       // };
+    //       setDecCreds(decryptCreds);
+    //     } catch (error) {
+    //       console.error("Error fetching decrypted credentials:", error);
+    //     }
+    //   };
 
-      fetchData();
-    }
+    //   fetchData();
+    // }
   }, [selectedItem, isCreating]);
 
   const { modalRef, buttonRef, isOpen, closeModal, openModal } = useModal();
@@ -143,7 +161,9 @@ const Item = () => {
                 </p>
                 <div className="flex gap-[2px]">
                   <p className="text-black text-sm not-italic font-normal leading-[normal]">
-                    account {selectedItem.order ?? "1"}
+                    {selectedItem.order
+                      ? "account " + selectedItem.order
+                      : null}
                   </p>
                   <p className="text-[#767C7C] text-sm not-italic font-normal leading-[normal]">
                     {selectedItem && isShareItemType(selectedItem)

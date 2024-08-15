@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { itemActions } from "../../../store/item.slice.ts";
@@ -46,7 +46,7 @@ const ItemList = () => {
     }
   }, [isSuccess, data]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (itemsToRender.length > 0) {
       dispatch(itemActions.selectItem(itemsToRender[0]));
     }
@@ -55,6 +55,16 @@ const ItemList = () => {
   if (isError) {
     console.log("Error in fetching items");
   }
+
+  // useLayoutEffect(() => {
+  //   if (isSuccess && data) {
+  //     const updatedItems = addOrderToAccounts(data);
+  //     setItemsToRender(updatedItems);
+  //     if (updatedItems.length > 0) {
+  //       dispatch(itemActions.selectItem(updatedItems[0]));
+  //     }
+  //   }
+  // }, [isSuccess, data, dispatch]);
 
   const filteredItems = useMemo(() => {
     return searchQuery.trim()

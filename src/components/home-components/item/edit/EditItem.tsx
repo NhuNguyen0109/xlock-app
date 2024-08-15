@@ -151,7 +151,7 @@ const EditItem: React.FC<EditingItem> = ({ cancel }) => {
             />
             <div className="flex gap-[2px]">
               <p className="text-black text-sm not-italic font-normal leading-[normal]">
-                account {selectedItem?.order}
+                {selectedItem.order ? "account " + selectedItem.order : null}
               </p>
               <p className="text-[#767C7C] text-sm not-italic font-normal leading-[normal]">
                 {selectedItem && isShareItemType(selectedItem)
