@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/index.ts";
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { loginActions } from "../../store/login.slice.ts";
 import useModal from "../../utils/useModal.ts";
@@ -26,10 +27,11 @@ const Header = () => {
     if (!loginState) navigate("/");
   };
 
-  // Check the current path and call handleLogout if the path is "/"
-  if (location.pathname === "/") {
-    handleLogout();
-  }
+  useEffect(() => {
+    if (location.pathname === "/") {
+      handleLogout();
+    }
+  }, [location.pathname]);
 
   return (
     <>

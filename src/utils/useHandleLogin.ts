@@ -5,10 +5,10 @@ import requestSendData from "./browserCall/request.send.data";
 import { getConcatStr } from "./concat-text";
 import { storeAccessToken } from "./access-token";
 import LoginType, { ResponseLoginType } from "../types/login";
-// import { base64ToCryptoKey } from "./handleHassPassType";
 
 export const useSubmitLogin = () => {
   const dispatch = useDispatch();
+
   return ({ email, password }: LoginType) => {
     apiCall<ResponseLoginType, LoginType>({
       method: "POST",
@@ -25,14 +25,6 @@ export const useSubmitLogin = () => {
         console.error("Login failed:", error);
         dispatch(loginActions.handleFailureLogin());
       });
-  };
-};
-
-export const useLoggedIn = () => {
-  const dispatch = useDispatch();
-
-  return () => {
-    dispatch(loginActions.handleSuccessLogin());
   };
 };
 
