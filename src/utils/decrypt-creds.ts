@@ -1,5 +1,4 @@
 import requestDecrypt from "./browserCall/request.decrypt";
-import { getConcatStr } from "./concat-text";
 
 export type DecryptedCreds = {
   credential: string;
@@ -9,11 +8,15 @@ export type DecryptedCreds = {
 
 const getDecryptedCreds = async (
   text: string,
-  type_creds: string
+  type_creds: string,
+  enc_pri?: string
 ): Promise<DecryptedCreds> => {
   try {
-    const concatStr = getConcatStr();
-    const response = await requestDecrypt(text, concatStr, type_creds);
+    const response = await requestDecrypt(
+      text,
+      type_creds,
+      ...(enc_pri ? [enc_pri] : [])
+    );
     if (response) {
       const decryptedCreds = response.plaintext.split("::");
       if (decryptedCreds.length >= 2) {

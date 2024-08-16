@@ -13,8 +13,6 @@ export const useSubmitLogin = () => {
     (state: RootState) => state.register.rsa_key_pair.salt
   );
 
-  console.log("salt", salt);
-
   return async ({ identity, password }: LoginType): Promise<boolean> => {
     try {
       const response = await apiCall<ResponseLoginType, LoginType>({

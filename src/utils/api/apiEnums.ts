@@ -17,6 +17,9 @@ export enum ApiEndpoints {
   //history
   GetDeviceHistory = "/api/v1/devices",
   GetHistory = "/api/v1/history/filling/", //optional: ${item.id}
+
+  //key
+  GetKey = "/api/v1/auth/keys/", //optional: ${subject}
 }
 
 export default ApiEndpoints;

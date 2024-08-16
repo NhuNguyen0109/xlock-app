@@ -13,9 +13,15 @@ import StatusPopup from "../../../status-popup/StatusPopup";
 import getDecryptedCreds from "../../../../utils/decrypt-creds";
 import requestEncrypt from "../../../../utils/browserCall/request.encrypt.key";
 import asyncWithErrorHandler from "../../../../utils/errorHandler";
+import KeyType from "../../../../types/key";
+import UserType from "../../../../types/user";
 
 interface SharePopup {
   closeModal(): void;
+}
+
+interface Username {
+  username: string;
 }
 
 const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
@@ -24,25 +30,15 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [errorCallingExt, setErrorCallingExt] = useState(false);
 
-  const {
-    mutate: mutateCreate,
-    isSuccess,
-    isError,
-  } = useMutation({
-    mutationFn: apiCall<ResponseCreateShareItem, CreateShareItem>,
-    onSuccess: () => console.log("Successfully created shared item"),
-    onError: () => console.log("Failed to created shared item"),
-  });
-
-  const { mutate } = useMutation({
-    mutationFn: apiCall<ResponseShareItemType, ShareItemType>,
+  const { mutate: mutateGetKey } = useMutation({
+    mutationFn: apiCall<KeyType>,
     onSuccess: async (data) => {
       // Get public key of B
-      const publicKeyB = data.data.recipient_pub;
+      const publicKeyB = data.data.public_key;
 
       // Decrypt credentials of A to get raw credentials
       const decryptedCreds = await asyncWithErrorHandler(
-        () => getDecryptedCreds(data.data.enc_credentials, data.data.type),
+        () => getDecryptedCreds(item.enc_credentials, item.type),
         "Failed to decrypt credentials"
       );
 
@@ -70,9 +66,7 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
         endpoint: ApiEndpoints.CreateShareItem,
         requestData: {
           item_id: item.id,
-          recipient: {
-            email: tags[0],
-          },
+          recipient: tags[0],
           enc_credentials,
         },
       });
@@ -82,16 +76,20 @@ const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
     },
   });
 
+  const {
+    mutate: mutateCreate,
+    isSuccess,
+    isError,
+  } = useMutation({
+    mutationFn: apiCall<ResponseCreateShareItem, CreateShareItem>,
+    onSuccess: () => console.log("Successfully created shared item"),
+    onError: () => console.log("Failed to created shared item"),
+  });
+
   const handleShare = () => {
-    mutate({
+    mutateGetKey({
       method: "POST",
-      endpoint: ApiEndpoints.ShareItem,
-      requestData: {
-        item_id: item.id,
-        recipient: {
-          email: tags[0],
-        },
-      },
+      endpoint: `${ApiEndpoints.GetKey}${tags[0]}`,
     });
   };
 

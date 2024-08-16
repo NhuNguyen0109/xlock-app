@@ -1,7 +1,7 @@
 export default function requestDecrypt(
   text: string,
-  concatStr: string,
-  type_creds: string
+  type_creds: string,
+  enc_pri?: string
 ): Promise<{
   plaintext: string;
 }> {
@@ -13,7 +13,7 @@ export default function requestDecrypt(
         type: "REQUEST_DECRYPT",
         text,
         type_creds,
-        concatStr,
+        ...(enc_pri && { enc_pri }),
       },
       (res: { success: boolean; plaintext: string }) => {
         if (res.success) {

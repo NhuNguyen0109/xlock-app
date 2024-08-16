@@ -2,12 +2,14 @@ import { useState, useMemo, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { itemActions } from "../../../store/item.slice.ts";
+import { loginActions } from "../../../store/login.slice.ts";
 import { apiCall, ApiEndpoints } from "../../../utils/index.ts";
 import { RootState } from "../../../store/index.ts";
 import "../../../assets/styles";
 import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
 import ItemCard from "./ItemCard";
+import { PersonalKeyType } from "../../../types/key.ts";
 
 const defaultItem = {
   name: "",
@@ -40,11 +42,28 @@ const ItemList = () => {
     },
   });
 
+  const { data: enc_pri, isSuccess: enc_pri_success } = useQuery({
+    queryKey: ["enc_pri"],
+    queryFn: async () => {
+      const response = await apiCall<PersonalKeyType, undefined>({
+        endpoint: `${ApiEndpoints.GetKey}me`,
+        method: "GET",
+      });
+      return response.data.enc_pri;
+    },
+  });
+
   useEffect(() => {
     if (isSuccess && data) {
       setItemsToRender(addOrderToAccounts(data));
     }
   }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (enc_pri && enc_pri_success) {
+      dispatch(loginActions.setEncPri(enc_pri));
+    }
+  }, [enc_pri, enc_pri_success]);
 
   useLayoutEffect(() => {
     if (itemsToRender.length > 0) {

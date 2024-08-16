@@ -15,9 +15,7 @@ export interface ResponseShareItemType {
 export interface CreateShareItem {
   item_id: string;
   enc_credentials: string;
-  recipient: {
-    email: string;
-  };
+  recipient: string;
 }
 
 export interface ResponseCreateShareItem {}

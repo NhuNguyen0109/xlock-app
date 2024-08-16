@@ -30,13 +30,16 @@ const Item = () => {
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
+  const enn_pri = useSelector((state: RootState) => state.login.enc_pri);
+  const sharedItem = isShareItemType(selectedItem);
 
   const { data, isSuccess, isError } = useQuery({
     queryKey: ["item", selectedItem.id],
     queryFn: async () => {
       const decryptCreds = await getDecryptedCreds(
         selectedItem.enc_credentials,
-        selectedItem.type
+        selectedItem.type,
+        ...(sharedItem ? [enn_pri] : [])
       );
       return decryptCreds;
     },
@@ -166,7 +169,7 @@ const Item = () => {
                       : null}
                   </p>
                   <p className="text-[#767C7C] text-sm not-italic font-normal leading-[normal]">
-                    {selectedItem && isShareItemType(selectedItem)
+                    {sharedItem
                       ? "| Item shared by " + selectedItem.shared_by.email
                       : null}
                   </p>
