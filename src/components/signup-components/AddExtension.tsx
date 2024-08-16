@@ -10,9 +10,9 @@ const AddExtension: React.FC<ButtonType> = ({ handleNextStep }) => {
         <p className="h1">to your browser</p>
       </div>
       <p className="body-text font-[500] text-center">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis
+        Secure your accounts effortlessly by adding the XLock extension to your
+        browser. This will enable automatic password management, keeping your
+        credentials safe and easily accessible wherever you go
       </p>
       <div className="flex flex-col justify-center items-center gap-[8px]">
         <button

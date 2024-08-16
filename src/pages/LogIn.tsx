@@ -11,7 +11,7 @@ const LogIn = () => {
   const submitLogin = useSubmitLogin();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
+    identity: "",
     password: "",
   });
 
@@ -23,15 +23,24 @@ const LogIn = () => {
     }));
   };
   const handleLogin = async () => {
-    const { password: hashedPassword } = await requestHashPassword(
-      formData.password
-    );
     try {
-      await submitLogin({
-        email: formData.email,
+      const { password: hashedPassword } = await requestHashPassword(
+        formData.password
+      );
+      console.log({
+        identity: formData.identity,
         password: hashedPassword,
       });
-      handleNavigate();
+      const success = await submitLogin({
+        identity: formData.identity,
+        password: hashedPassword,
+      });
+
+      if (success) {
+        handleNavigate();
+      } else {
+        console.error("Login process failed");
+      }
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -65,8 +74,8 @@ const LogIn = () => {
             >
               <InputFieldSubmit
                 title="Email/Username"
-                value={formData.email}
-                type="email"
+                value={formData.identity}
+                type="identity"
                 handleChangeValue={handleChangeValue}
               />
               <InputFieldSubmit
@@ -86,14 +95,19 @@ const LogIn = () => {
               <p className="body-text text-xs">Or</p>
               <button className="button-3 font-[500] box-shadow w-[352px] h-[40px] flex items-center justify-center gap-[16px]">
                 <div className="w-[20px] h-[20px] flex justify-center">
-                  <img
-                    src="/images/Google.png"
-                    alt="Device"
-                    className=""
-                  />
+                  <img src="/images/Google.png" alt="Device" className="" />
                 </div>
                 Log in with Google
               </button>
+              <div className="flex w-full justify-center gap-[4px]">
+                <p className="body-text text-xs">Do not have an account?</p>
+                <a
+                  className="body-text text-xs text text-[#0570EB]"
+                  href="/signup"
+                >
+                  Create an XLock account
+                </a>
+              </div>
             </div>
             <div></div>
           </div>

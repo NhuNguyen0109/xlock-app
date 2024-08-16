@@ -1,54 +1,32 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { itemActions } from "../../../store/item.slice.ts";
+import { loginActions } from "../../../store/login.slice.ts";
 import { apiCall, ApiEndpoints } from "../../../utils/index.ts";
 import { RootState } from "../../../store/index.ts";
 import "../../../assets/styles";
 import addOrderToAccounts from "../../../utils/orderAccount.ts";
 import AccountType from "../../../types/item.ts";
 import ItemCard from "./ItemCard";
+import { PersonalKeyType } from "../../../types/key.ts";
 
-const defaultAccount: AccountType = {
-  id: "",
+const defaultItem = {
   name: "",
   site: "",
   description: "",
   enc_credentials: "",
+  logo_url: "",
+  id: "",
   added_at: "",
   updated_at: "",
-  logo_url: "",
   type: "",
 };
-
-let DATA: AccountType[] = [
-  {
-    id: "1",
-    name: "XLock",
-    site: "https://example.org",
-    description: "Conveniently scale focused paradigms.",
-    enc_credentials: "anngo",
-    added_at: "2023-07-15",
-    updated_at: "2023-07-15",
-    logo_url: "",
-    type: "personal_item",
-  },
-  {
-    id: "2",
-    name: "Netflix",
-    site: "https://example.org",
-    description: "Conveniently scale focused paradigms.",
-    enc_credentials: "anngo",
-    added_at: "2023-07-15",
-    updated_at: "2023-07-15",
-    logo_url: "",
-    type: "personal_item",
-  },
-];
 
 const ItemList = () => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [itemsToRender, setItemsToRender] = useState<AccountType[]>([]);
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
@@ -60,22 +38,53 @@ const ItemList = () => {
         endpoint: ApiEndpoints.GetListItems,
         method: "GET",
       });
-      console.log("success fetching items");
       return response.data;
     },
   });
 
-  let itemsToRender = addOrderToAccounts(DATA);
+  const { data: enc_pri, isSuccess: enc_pri_success } = useQuery({
+    queryKey: ["enc_pri"],
+    queryFn: async () => {
+      const response = await apiCall<PersonalKeyType, undefined>({
+        endpoint: `${ApiEndpoints.GetKey}me`,
+        method: "GET",
+      });
+      return response.data.enc_pri;
+    },
+  });
 
-  if (isSuccess) {
-    itemsToRender = addOrderToAccounts(data);
-  }
+  useEffect(() => {
+    if (isSuccess && data) {
+      setItemsToRender(addOrderToAccounts(data));
+    }
+  }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (enc_pri && enc_pri_success) {
+      dispatch(loginActions.setEncPri(enc_pri));
+    }
+  }, [enc_pri, enc_pri_success]);
+
+  useLayoutEffect(() => {
+    if (itemsToRender.length > 0) {
+      dispatch(itemActions.selectItem(itemsToRender[0]));
+    }
+  }, [dispatch, itemsToRender]);
 
   if (isError) {
     console.log("Error in fetching items");
   }
 
-  // Filter items based on the search query
+  // useLayoutEffect(() => {
+  //   if (isSuccess && data) {
+  //     const updatedItems = addOrderToAccounts(data);
+  //     setItemsToRender(updatedItems);
+  //     if (updatedItems.length > 0) {
+  //       dispatch(itemActions.selectItem(updatedItems[0]));
+  //     }
+  //   }
+  // }, [isSuccess, data, dispatch]);
+
   const filteredItems = useMemo(() => {
     return searchQuery.trim()
       ? itemsToRender.filter(
@@ -87,15 +96,12 @@ const ItemList = () => {
   }, [searchQuery, itemsToRender]);
 
   useEffect(() => {
-    dispatch(itemActions.selectItem(itemsToRender[0]));
-  }, [dispatch]);
-
-  useEffect(() => {
     setSearchQuery("");
   }, [selectedItem]);
 
   const handleCreateItem = () => {
-    dispatch(itemActions.selectItem(defaultAccount));
+    dispatch(itemActions.selectItem(defaultItem));
+    dispatch(itemActions.setISCreatingTrue());
   };
 
   return (

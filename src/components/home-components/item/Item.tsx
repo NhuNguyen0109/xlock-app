@@ -1,6 +1,7 @@
 import "../../../assets/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useLayoutEffect, useEffect } from "react";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import useModal from "../../../utils/useModal.ts";
 import { RootState } from "../../../store/index.ts";
 import InputFieldDisabled from "../../input-field/InputFieldDisabled.tsx";
@@ -13,42 +14,78 @@ import getDecryptedCreds, {
 import EditItem from "./edit/EditItem.tsx";
 import DeletePopup from "./delete/DeletePopup.tsx";
 import CreateItem from "./create/CreateItem.tsx";
+import EmptyItem from "./EmptyItem.tsx";
+import { itemActions } from "../../../store/item.slice.ts";
 
 const Item = () => {
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
   const [isReveal, setIsReveal] = useState(false);
   const [isEditing, setIsEditting] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
+  // const [isCreating, setIsCreating] = useState(false);
+  const [emptyItem, setEmptyItem] = useState(false);
   const [decCreds, setDecCreds] = useState<DecryptedCreds>();
+  const isCreating = useSelector((state: RootState) => state.item.isCreating);
   const selectedItem = useSelector(
     (state: RootState) => state.item.selectedItem
   );
+  const enn_pri = useSelector((state: RootState) => state.login.enc_pri);
+  const sharedItem = isShareItemType(selectedItem);
+
+  const { data, isSuccess, isError } = useQuery({
+    queryKey: ["item", selectedItem.id],
+    queryFn: async () => {
+      const decryptCreds = await getDecryptedCreds(
+        selectedItem.enc_credentials,
+        selectedItem.type,
+        ...(sharedItem ? [enn_pri] : [])
+      );
+      return decryptCreds;
+    },
+    enabled: !!selectedItem.id && !isCreating,
+    refetchInterval: 10000,
+  });
 
   useEffect(() => {
-    setIsEditting(false);
-    if (selectedItem.id === "") {
-      setIsCreating(true);
-    } else {
-      setIsCreating(false);
-      const fetchData = async () => {
-        try {
-          const decryptCreds = await getDecryptedCreds(
-            selectedItem.enc_credentials,
-            selectedItem.type
-          );
-          // const decryptCreds = {
-          //   credential: selectedItem.enc_credentials,
-          //   password: "hihi",
-          //   raw_creds: selectedItem.enc_credentials,
-          // };
-          setDecCreds(decryptCreds);
-        } catch (error) {
-          console.error("Error fetching decrypted credentials:", error);
-        }
-      };
+    if (isSuccess) setDecCreds(data);
+  }, [data, isSuccess]);
 
-      fetchData();
-    }
-  }, [selectedItem]);
+  if (isError) console.log("Failed to decrypt");
+
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      const cachedItems =
+        queryClient.getQueryData<AccountType[]>(["items"]) || [];
+      setEmptyItem(cachedItems.length === 0);
+    }, 100);
+
+    //reset
+    setIsEditting(false);
+    closeModalDelete();
+    closeModalShare();
+
+    // if (!isCreating) {
+    //   const fetchData = async () => {
+    //     try {
+    //       const decryptCreds = await getDecryptedCreds(
+    //         selectedItem.enc_credentials,
+    //         selectedItem.type
+    //       );
+    //       // const decryptCreds = {
+    //       //   credential: selectedItem.enc_credentials,
+    //       //   password: "hihi",
+    //       //   raw_creds: selectedItem.enc_credentials,
+    //       // };
+    //       setDecCreds(decryptCreds);
+    //     } catch (error) {
+    //       console.error("Error fetching decrypted credentials:", error);
+    //     }
+    //   };
+
+    //   fetchData();
+    // }
+  }, [selectedItem, isCreating]);
 
   const { modalRef, buttonRef, isOpen, closeModal, openModal } = useModal();
   const {
@@ -76,7 +113,7 @@ const Item = () => {
     if (option === "delete") openModalDelete();
     if (option === "share") openModalShare();
     if (option === "create") {
-      setIsCreating(true);
+      dispatch(itemActions.setISCreatingTrue());
     }
     closeModal();
   };
@@ -87,7 +124,7 @@ const Item = () => {
 
   return (
     <div className="item-section flex flex-col flex-grow items-center">
-      {!isEditing && !isCreating && (
+      {!emptyItem && !isEditing && !isCreating && (
         <>
           {isOpenShare && (
             <div className="blur-bg">
@@ -127,10 +164,12 @@ const Item = () => {
                 </p>
                 <div className="flex gap-[2px]">
                   <p className="text-black text-sm not-italic font-normal leading-[normal]">
-                    account {selectedItem.order}
+                    {selectedItem.order
+                      ? "account " + selectedItem.order
+                      : null}
                   </p>
                   <p className="text-[#767C7C] text-sm not-italic font-normal leading-[normal]">
-                    {selectedItem && isShareItemType(selectedItem)
+                    {sharedItem
                       ? "| Item shared by " + selectedItem.shared_by.email
                       : null}
                   </p>
@@ -209,8 +248,13 @@ const Item = () => {
           </div>
         </>
       )}
-      {isEditing && <EditItem cancel={() => setIsEditting(false)} />}
-      {isCreating && <CreateItem cancel={() => setIsCreating(false)} />}
+      {!emptyItem && isEditing && (
+        <EditItem cancel={() => setIsEditting(false)} />
+      )}
+      {isCreating && (
+        <CreateItem cancel={() => dispatch(itemActions.setISCreatingFalse())} />
+      )}
+      {emptyItem && !isEditing && !isCreating && <EmptyItem />}
     </div>
   );
 };

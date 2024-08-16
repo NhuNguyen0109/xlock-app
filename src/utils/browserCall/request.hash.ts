@@ -11,7 +11,7 @@ export default function requestHashPassword(
       async (res: { success: boolean; password: string; salt: string }) => {
         if (res.success) {
           try {
-            resolve({ password: password, salt: res.salt });
+            resolve({ password: res.password, salt: res.salt });
           } catch (error) {
             reject(new Error("Error hasing password " + error));
           }

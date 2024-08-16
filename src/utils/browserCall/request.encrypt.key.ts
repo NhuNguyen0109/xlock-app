@@ -12,25 +12,25 @@ export default function requestEncrypt(
     chrome.runtime.sendMessage(
       id,
       {
-        type: "REQUEST_ENCRYPT_PRIVATE_KEY",
+        type: "REQUEST_ENCRYPT",
         privateKey: key,
         ...(password && { password }),
       },
       (res: {
         success: boolean;
-        encryptedPrivateKey: string;
+        cipherText: string;
         salt: string;
         initializationVector: string;
       }) => {
         if (res.success) {
           const concatenatedData = concatenateData(
-            res.encryptedPrivateKey,
+            res.cipherText,
             res.initializationVector,
             res.salt
           );
           resolve({
             concatenatedData,
-            encrypted: res.encryptedPrivateKey,
+            encrypted: res.cipherText,
             salt: res.salt,
             initializationVector: res.initializationVector,
           });
@@ -47,6 +47,6 @@ function concatenateData(
   initializationVector: string,
   salt: string
 ) {
-  // return `${initializationVector}::${salt}`;
+  // return ${initializationVector}::${salt};
   return `${initializationVector}::${salt}::${cipherText}`;
 }

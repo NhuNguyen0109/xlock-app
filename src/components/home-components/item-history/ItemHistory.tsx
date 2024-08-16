@@ -15,7 +15,7 @@ const ItemHistory = () => {
     openModal,
     buttonRef,
   } = useModal();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [isAccessTab, setIsAccessTab] = useState(true);
   const [thisDevice, setThisDevice] = useState(false);
   const [thisBrowser, setThisBrowser] = useState(true);
@@ -24,9 +24,9 @@ const ItemHistory = () => {
   );
 
   useEffect(() => {
-    if (selectedItem.id === "") {
-      setIsOpen(false);
-    } else setIsOpen(true);
+    // if (selectedItem.id === "") {
+    setIsOpen(false);
+    // } else setIsOpen(true);
   }, [selectedItem]);
 
   const CloseHistory = () => {

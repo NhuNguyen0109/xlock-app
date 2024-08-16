@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" />;
   }
 
-  const { data, isSuccess } = useQuery<ResponseAuth>({
+  const { data, isSuccess, isError } = useQuery<ResponseAuth>({
     queryKey: ["accesstoken"],
     queryFn: async () => {
       const response = await apiCall<ResponseAuth, Auth>({
@@ -40,6 +40,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       dispatch(loginActions.handleFailureLogin());
       return <Navigate to="/login" />;
     }
+  }
+
+  if (isError) {
+    dispatch(loginActions.handleFailureLogin());
+    return <Navigate to="/login" />;
   }
 
   return null;

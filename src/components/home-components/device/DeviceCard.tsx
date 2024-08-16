@@ -28,7 +28,7 @@ const DeviceCard: React.FC<DeviceType> = (props) => {
             title={props.device}
             body={props.browser}
             date={currentDevice ? "Now" : props.date}
-            imageUrl="/images/device.png"
+            imageUrl="src/assets/images/device.png"
           />
         </div>
         <div className="flex h-full justify-center items-end  pb-[8px]">

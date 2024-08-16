@@ -14,13 +14,12 @@ const Tutorial: React.FC<ButtonType> = ({ handleNextStep }) => {
           >
             1
           </span>
-          <div className="flex flex-col w-[290px] h-full">
+          <div className="flex flex-col w-[290px] h-full gap-[4px]">
             <p className="text-black text-lg not-italic font-bold leading-[normal]">
               Open XLock
             </p>
             <p className="text-black text-sm not-italic font-medium leading-[normal]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor
+              Launch XLock in your web browser or open the extension
             </p>
           </div>
         </div>
@@ -31,13 +30,12 @@ const Tutorial: React.FC<ButtonType> = ({ handleNextStep }) => {
           >
             2
           </span>
-          <div className="flex flex-col w-[290px] h-full">
+          <div className="flex flex-col w-[290px] h-full gap-[4px]">
             <p className="text-black text-lg not-italic font-bold leading-[normal]">
               Log in
             </p>
             <p className="text-black text-sm not-italic font-medium leading-[normal]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor
+              Sign in to your XLock account securely with your credentials
             </p>
           </div>
         </div>
@@ -48,13 +46,12 @@ const Tutorial: React.FC<ButtonType> = ({ handleNextStep }) => {
           >
             3
           </span>
-          <div className="flex flex-col w-[290px] h-full">
+          <div className="flex flex-col w-[290px] h-full gap-[4px]">
             <p className="text-black text-lg not-italic font-bold leading-[normal]">
               Get quick access to XLock
             </p>
             <p className="text-black text-sm not-italic font-medium leading-[normal]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor
+              Pin the XLock extension to your browser toolbar for instant access
             </p>
           </div>
         </div>

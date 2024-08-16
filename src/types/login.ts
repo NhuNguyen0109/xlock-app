@@ -1,5 +1,5 @@
 export default interface LoginType {
-  email: string;
+  identity: string;
   password: string; //Hash of password
 }
 
