@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import KeyType from "../types/key";
 
 // export interface User {
 //   // name?: string;
