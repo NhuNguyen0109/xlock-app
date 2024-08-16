@@ -1,7 +1,7 @@
 export default function requestSendData(
   access_token: string,
   password: string,
-  concatStr: string
+  salt?: string
 ): Promise<void> {
   const id = import.meta.env.VITE_EXTENSION_ID;
 
@@ -12,7 +12,7 @@ export default function requestSendData(
         access_token: access_token,
         type: "SEND_DATA",
         password: password,
-        concatStr: concatStr,
+        ...(salt && { salt }),
       },
       (res: { success: boolean }) => {
         if (res.success) {

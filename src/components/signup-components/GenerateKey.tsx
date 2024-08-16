@@ -8,7 +8,7 @@ import requestKeyPair from "../../utils/browserCall/request.key.pair";
 import requestEncrypt from "../../utils/browserCall/request.encrypt.key";
 import ButtonType from "../../types/button";
 import requestHashPassword from "../../utils/browserCall/request.hash";
-import { storeConcatStr } from "../../utils/concat-text";
+// import { storeConcatStr } from "../../utils/concat-text";
 
 const GenerateKey: React.FC<ButtonType> = ({ handleNextStep }) => {
   const dispatch = useDispatch();
@@ -22,8 +22,6 @@ const GenerateKey: React.FC<ButtonType> = ({ handleNextStep }) => {
           privateKey,
           password
         );
-
-        storeConcatStr(concatenatedData);
 
         const { password: hashedPassword } = await requestHashPassword(
           password,
