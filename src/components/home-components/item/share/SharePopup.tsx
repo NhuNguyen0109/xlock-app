@@ -4,9 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { RootState } from "../../../../store";
 import "../../../../assets/styles";
 import { apiCall, ApiEndpoints } from "../../../../utils";
-import ShareItemType, {
+import {
   ResponseCreateShareItem,
-  ResponseShareItemType,
   CreateShareItem,
 } from "../../../../types/share-item";
 import StatusPopup from "../../../status-popup/StatusPopup";
@@ -14,14 +13,9 @@ import getDecryptedCreds from "../../../../utils/decrypt-creds";
 import requestEncrypt from "../../../../utils/browserCall/request.encrypt.key";
 import asyncWithErrorHandler from "../../../../utils/errorHandler";
 import KeyType from "../../../../types/key";
-import UserType from "../../../../types/user";
 
 interface SharePopup {
   closeModal(): void;
-}
-
-interface Username {
-  username: string;
 }
 
 const SharePopup: React.FC<SharePopup> = ({ closeModal }) => {
